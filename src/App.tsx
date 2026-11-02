@@ -14,12 +14,12 @@ import { GoalsPage } from '@/pages/GoalsPage';
 import { RecurringPage } from '@/pages/RecurringPage';
 import { InsightsPage } from '@/pages/InsightsPage';
 import { MorePage } from '@/pages/MorePage';
+import { AuthPage } from '@/pages/AuthPage';
 import { AddTransactionModal } from '@/components/transactions/AddTransactionModal';
 import { SmartPasteModal } from '@/components/transactions/SmartPasteModal';
 import { CsvImportModal } from '@/components/transactions/CsvImportModal';
 import { ReceiptModal } from '@/components/transactions/ReceiptModal';
 import { OnboardingModal } from '@/components/auth/OnboardingModal';
-import { AuthModal } from '@/components/auth/AuthModal';
 import { Toaster } from 'sonner';
 
 const AppContent: React.FC<{ darkMode: boolean; setDarkMode: (v: boolean) => void }> = ({
@@ -38,14 +38,35 @@ const AppContent: React.FC<{ darkMode: boolean; setDarkMode: (v: boolean) => voi
     setReceiptModalUrl,
   } = useFinance();
 
-  const [isOnboardingOpen, setIsOnboardingOpen] = useState(!isOnboarded);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
 
   useEffect(() => {
-    if (!isOnboarded) {
+    if (user && !isOnboarded) {
       setIsOnboardingOpen(true);
     }
-  }, [isOnboarded]);
+  }, [user, isOnboarded]);
+
+  // If user is not authenticated or logged out, show Login / Signup page
+  if (!user) {
+    return (
+      <>
+        <AuthPage darkMode={darkMode} setDarkMode={setDarkMode} />
+        <Toaster
+          position="top-right"
+          richColors
+          closeButton
+          theme={darkMode ? 'dark' : 'light'}
+          toastOptions={{
+            style: {
+              borderRadius: '1.25rem',
+              padding: '0.85rem 1.15rem',
+              fontFamily: 'Plus Jakarta Sans, sans-serif',
+            },
+          }}
+        />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col sm:flex-row font-sans transition-colors duration-200">
@@ -104,11 +125,6 @@ const AppContent: React.FC<{ darkMode: boolean; setDarkMode: (v: boolean) => voi
       <OnboardingModal
         isOpen={isOnboardingOpen}
         onClose={() => setIsOnboardingOpen(false)}
-      />
-
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
       />
 
       {/* Notifications Toast */}

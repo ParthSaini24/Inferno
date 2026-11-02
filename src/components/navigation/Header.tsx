@@ -1,5 +1,6 @@
 import React from 'react';
-import { Sun, Moon, Sparkles, Plus, Users, Calendar } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Sun, Moon, Sparkles, Users, Calendar, LogOut } from 'lucide-react';
 import { useFinance } from '@/context/FinanceContext';
 import { useAuth } from '@/context/AuthContext';
 
@@ -9,13 +10,8 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode }) => {
-  const { setIsSmartPasteOpen, setIsAddTxOpen, setPrefilledTxData } = useFinance();
-  const { household, user } = useAuth();
-
-  const handleOpenAdd = () => {
-    setPrefilledTxData(null);
-    setIsAddTxOpen(true);
-  };
+  const { setIsSmartPasteOpen } = useFinance();
+  const { household, user, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-30 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between">
@@ -66,13 +62,23 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode }) => {
         </button>
 
         {/* User avatar on mobile */}
-        <div className="sm:hidden">
+        <Link to="/more" className="sm:hidden" title="View profile & settings">
           <img
             src={user?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'}
             alt="Profile"
             className="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-700"
           />
-        </div>
+        </Link>
+
+        {/* Quick Sign Out Button */}
+        <button
+          onClick={signOut}
+          className="w-9 h-9 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition active:scale-95"
+          aria-label="Sign out"
+          title="Sign out of PaisaPilot"
+        >
+          <LogOut className="w-4 h-4" />
+        </button>
       </div>
     </header>
   );
