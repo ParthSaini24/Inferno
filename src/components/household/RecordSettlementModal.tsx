@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useFinance } from '@/context/FinanceContext';
 import { useAuth } from '@/context/AuthContext';
 import { PaymentMode } from '@/types';
-import { X, ArrowRight, Smartphone, Banknote, Landmark, CheckCircle2 } from 'lucide-react';
+import { X, ArrowRight, Smartphone, Banknote, Landmark, CheckCircle2, QrCode } from 'lucide-react';
+import { UpiQrModal } from '@/components/upi/UpiQrModal';
 import { toast } from 'sonner';
 
 interface RecordSettlementModalProps {
@@ -29,6 +30,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
   const [paymentMode, setPaymentMode] = useState<PaymentMode>('upi');
   const [note, setNote] = useState('Household expense settlement via UPI');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
   if (!isOpen) return null;
 
@@ -164,6 +166,17 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
                 );
               })}
             </div>
+
+            {paymentMode === 'upi' && (
+              <button
+                type="button"
+                onClick={() => setIsQrModalOpen(true)}
+                className="w-full mt-2 py-2 px-3 rounded-xl bg-teal-50 dark:bg-teal-950/60 hover:bg-teal-100 dark:hover:bg-teal-900/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 text-xs font-bold flex items-center justify-center gap-2 transition active:scale-95 shadow-2xs"
+              >
+                <QrCode className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                <span>Show Dynamic UPI QR & Intent Buttons</span>
+              </button>
+            )}
           </div>
 
           {/* Note & Date */}
@@ -211,6 +224,25 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
           </div>
         </form>
       </div>
+
+      {/* Embedded UPI QR Modal */}
+      <UpiQrModal
+        isOpen={isQrModalOpen}
+        onClose={() => setIsQrModalOpen(false)}
+        payeeName={toUser}
+        payeeVpa={
+          householdMembers.find((m) => m.name === toUser)?.upi_id ||
+          (toUser.toLowerCase().includes('parth')
+            ? user?.upi_id || 'parth@okaxis'
+            : `${toUser.toLowerCase().replace(/\s+/g, '')}@okaxis`)
+        }
+        amount={parseFloat(amountStr) || 100}
+        note={note}
+        fromName={fromUser}
+        onMarkAsSettled={() => {
+          handleSubmit({ preventDefault: () => {} } as any);
+        }}
+      />
     </div>
   );
 };

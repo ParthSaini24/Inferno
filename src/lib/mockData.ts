@@ -9,6 +9,8 @@ import {
   Goal,
   ChitFund,
   Settlement,
+  Account,
+  GoldAsset,
 } from '@/types';
 
 export const INITIAL_CATEGORIES: Category[] = [
@@ -38,6 +40,7 @@ export const INITIAL_PROFILE: UserProfile = {
   full_name: 'Parth Saini',
   avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
   currency: 'INR',
+  upi_id: 'parth@okaxis',
   created_at: '2026-10-01T00:00:00Z',
 };
 
@@ -57,6 +60,7 @@ export const INITIAL_HOUSEHOLD_MEMBERS: HouseholdMember[] = [
     avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     role: 'owner',
     share_percent: 50,
+    upi_id: 'parth@okaxis',
     created_at: '2026-10-01T00:00:00Z',
   },
   {
@@ -67,6 +71,7 @@ export const INITIAL_HOUSEHOLD_MEMBERS: HouseholdMember[] = [
     avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
     role: 'member',
     share_percent: 50,
+    upi_id: 'rohan@okhdfcbank',
     created_at: '2026-10-05T00:00:00Z',
   },
 ];
@@ -401,5 +406,102 @@ export const INITIAL_SETTLEMENTS: Settlement[] = [
     note: 'October apartment rent share paid via GPay UPI',
     payment_mode: 'upi',
     created_at: '2026-10-31T18:00:00Z',
+  },
+];
+
+export const INITIAL_ACCOUNTS: Account[] = [
+  {
+    id: 'acc-01',
+    user_id: 'usr-pilot-01',
+    name: 'HDFC Salary Account',
+    type: 'bank',
+    bank_name: 'HDFC Bank',
+    account_number_last4: '4592',
+    balance: 58400,
+    color: '#004c8f',
+    is_primary: true,
+    created_at: '2026-10-01T00:00:00Z',
+  },
+  {
+    id: 'acc-02',
+    user_id: 'usr-pilot-01',
+    name: 'SBI Family Savings',
+    type: 'bank',
+    bank_name: 'State Bank of India',
+    account_number_last4: '8831',
+    balance: 32150,
+    color: '#1a5276',
+    is_primary: false,
+    created_at: '2026-10-01T00:00:00Z',
+  },
+  {
+    id: 'acc-03',
+    user_id: 'usr-pilot-01',
+    name: 'Cash in Hand (Locker Reserve)',
+    type: 'cash',
+    balance: 6500,
+    color: '#059669',
+    created_at: '2026-10-01T00:00:00Z',
+  },
+  {
+    id: 'acc-04',
+    user_id: 'usr-pilot-01',
+    name: 'Paytm Wallet & Fastag',
+    type: 'wallet',
+    bank_name: 'Paytm Payments Bank',
+    balance: 1450,
+    color: '#00b9f1',
+    created_at: '2026-10-01T00:00:00Z',
+  },
+  {
+    id: 'acc-05',
+    user_id: 'usr-pilot-01',
+    name: 'ICICI Amazon Pay Credit Card',
+    type: 'credit_card',
+    bank_name: 'ICICI Bank',
+    account_number_last4: '9012',
+    balance: 14200, // outstanding spends
+    credit_limit: 200000,
+    billing_cycle_date: 15,
+    payment_due_date: 5,
+    color: '#ff9900',
+    created_at: '2026-10-01T00:00:00Z',
+  },
+  {
+    id: 'acc-06',
+    user_id: 'usr-pilot-01',
+    name: 'HDFC Regalia Gold Credit Card',
+    type: 'credit_card',
+    bank_name: 'HDFC Bank',
+    account_number_last4: '3341',
+    balance: 26500, // outstanding spends
+    credit_limit: 350000,
+    billing_cycle_date: 20,
+    payment_due_date: 10,
+    color: '#b8860b',
+    created_at: '2026-10-01T00:00:00Z',
+  },
+];
+
+export const INITIAL_GOLD_ASSETS: GoldAsset[] = [
+  {
+    id: 'gold-01',
+    user_id: 'usr-pilot-01',
+    name: 'Tanishq 24K Minted Bar (Diwali Dhanteras)',
+    type: 'physical',
+    weight_grams: 10.0,
+    purchase_price_per_gram: 7200,
+    purchase_date: '2026-10-29',
+    notes: 'Stored in bank locker #42',
+  },
+  {
+    id: 'gold-02',
+    user_id: 'usr-pilot-01',
+    name: 'RBI Sovereign Gold Bond (SGB 2024-25 Series III)',
+    type: 'sgb',
+    weight_grams: 8.0,
+    purchase_price_per_gram: 6250,
+    purchase_date: '2025-02-14',
+    notes: '2.5% p.a. semi-annual interest credited to HDFC A/c',
   },
 ];

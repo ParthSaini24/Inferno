@@ -22,7 +22,12 @@ import {
   ChevronRight,
   BarChart3,
   Users2,
+  Landmark,
+  Calculator,
+  Share2,
 } from 'lucide-react';
+import { IndianTaxCalculatorModal } from '@/components/tax/IndianTaxCalculatorModal';
+import { WhatsAppDigestModal } from '@/components/reports/WhatsAppDigestModal';
 import { toast } from 'sonner';
 
 interface MorePageProps {
@@ -33,6 +38,9 @@ interface MorePageProps {
 export const MorePage: React.FC<MorePageProps> = ({ darkMode, setDarkMode }) => {
   const { user, household, signOut } = useAuth();
   const { resetToDemoData, transactions, goals, recurringItems } = useFinance();
+
+  const [isTaxModalOpen, setIsTaxModalOpen] = useState(false);
+  const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
 
   const handleExportCsv = () => {
     if (transactions.length === 0) {
@@ -106,7 +114,21 @@ export const MorePage: React.FC<MorePageProps> = ({ darkMode, setDarkMode }) => 
       </div>
 
       {/* Feature Navigation Hub */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <Link
+          to="/accounts"
+          className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-teal-400 transition shadow-sm group"
+        >
+          <div className="w-9 h-9 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-2">
+            <Landmark className="w-5 h-5" />
+          </div>
+          <h3 className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
+            <span>Accounts & Cards</span>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+          </h3>
+          <p className="text-[10px] text-slate-400 mt-0.5">Banks, Cards & Gold</p>
+        </Link>
+
         <Link
           to="/goals"
           className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-400 transition shadow-sm group"
@@ -215,6 +237,48 @@ export const MorePage: React.FC<MorePageProps> = ({ darkMode, setDarkMode }) => 
             </button>
           </div>
 
+          {/* Indian Tax Regime Calculator */}
+          <div className="py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <Calculator className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <div>
+                <span className="font-medium text-slate-700 dark:text-slate-300 block">
+                  Indian Tax Estimator (Old vs New Slabs)
+                </span>
+                <span className="text-[11px] text-slate-400">
+                  Compare 80C, 80D, HRA & NPS deductions
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsTaxModalOpen(true)}
+              className="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-200 dark:border-emerald-800"
+            >
+              Calculate
+            </button>
+          </div>
+
+          {/* WhatsApp Household Digest */}
+          <div className="py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <Share2 className="w-4 h-4 text-emerald-500" />
+              <div>
+                <span className="font-medium text-slate-700 dark:text-slate-300 block">
+                  WhatsApp Family Digest & Statement
+                </span>
+                <span className="text-[11px] text-slate-400">
+                  Generate shareable monthly family statement
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsWhatsAppModalOpen(true)}
+              className="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-200 dark:border-emerald-800"
+            >
+              Share Digest
+            </button>
+          </div>
+
           {/* Export CSV */}
           <div className="py-3 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
@@ -244,6 +308,17 @@ export const MorePage: React.FC<MorePageProps> = ({ darkMode, setDarkMode }) => 
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <IndianTaxCalculatorModal
+        isOpen={isTaxModalOpen}
+        onClose={() => setIsTaxModalOpen(false)}
+      />
+
+      <WhatsAppDigestModal
+        isOpen={isWhatsAppModalOpen}
+        onClose={() => setIsWhatsAppModalOpen(false)}
+      />
     </div>
   );
 };

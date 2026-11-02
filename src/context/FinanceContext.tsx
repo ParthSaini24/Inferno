@@ -11,6 +11,8 @@ import {
   Goal,
   RecurringItem,
   ChitFund,
+  Account,
+  GoldAsset,
 } from '@/types';
 import {
   INITIAL_CATEGORIES,
@@ -21,6 +23,8 @@ import {
   INITIAL_GOALS,
   INITIAL_RECURRING,
   INITIAL_CHIT_FUNDS,
+  INITIAL_ACCOUNTS,
+  INITIAL_GOLD_ASSETS,
 } from '@/lib/mockData';
 import { useAuth } from './AuthContext';
 import { toast } from 'sonner';
@@ -34,6 +38,8 @@ interface FinanceContextType {
   goals: Goal[];
   recurringItems: RecurringItem[];
   chitFunds: ChitFund[];
+  accounts: Account[];
+  goldAssets: GoldAsset[];
 
   // Modal dialog states
   isAddTxOpen: boolean;
@@ -46,6 +52,16 @@ interface FinanceContextType {
   setReceiptModalUrl: (url: string | null) => void;
   prefilledTxData: Partial<Transaction> | null;
   setPrefilledTxData: (data: Partial<Transaction> | null) => void;
+
+  // Accounts CRUD
+  addAccount: (account: Omit<Account, 'id'>) => Promise<Account>;
+  updateAccount: (id: string, updates: Partial<Account>) => Promise<void>;
+  deleteAccount: (id: string) => Promise<void>;
+  transferBetweenAccounts: (fromId: string, toId: string, amount: number, note?: string) => Promise<void>;
+
+  // Gold Assets
+  addGoldAsset: (asset: Omit<GoldAsset, 'id'>) => Promise<GoldAsset>;
+  deleteGoldAsset: (id: string) => Promise<void>;
 
   // Transactions CRUD
   addTransaction: (tx: Omit<Transaction, 'id' | 'created_at' | 'user_id'>) => Promise<Transaction>;
@@ -147,6 +163,16 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return saved ? JSON.parse(saved) : INITIAL_CHIT_FUNDS;
   });
 
+  const [accounts, setAccounts] = useState<Account[]>(() => {
+    const saved = localStorage.getItem('paisapilot_accounts');
+    return saved ? JSON.parse(saved) : INITIAL_ACCOUNTS;
+  });
+
+  const [goldAssets, setGoldAssets] = useState<GoldAsset[]>(() => {
+    const saved = localStorage.getItem('paisapilot_gold');
+    return saved ? JSON.parse(saved) : INITIAL_GOLD_ASSETS;
+  });
+
   // Modal dialog states
   const [isAddTxOpen, setIsAddTxOpen] = useState(false);
   const [isSmartPasteOpen, setIsSmartPasteOpen] = useState(false);
@@ -186,6 +212,14 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     localStorage.setItem('paisapilot_chits', JSON.stringify(chitFunds));
   }, [chitFunds]);
+
+  useEffect(() => {
+    localStorage.setItem('paisapilot_accounts', JSON.stringify(accounts));
+  }, [accounts]);
+
+  useEffect(() => {
+    localStorage.setItem('paisapilot_gold', JSON.stringify(goldAssets));
+  }, [goldAssets]);
 
   const getCategoryById = (id: string) => categories.find((c) => c.id === id);
   const getCategoryByName = (name: string) =>
@@ -520,6 +554,83 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return newSettlement;
   };
 
+  // Accounts CRUD
+  const addAccount = async (accData: Omit<Account, 'id'>) => {
+    const newAccount: Account = {
+      ...accData,
+      id: `acc-${Date.now()}`,
+      user_id: user?.id || 'usr-pilot-01',
+      created_at: new Date().toISOString(),
+    };
+    setAccounts((prev) => [newAccount, ...prev]);
+    toast.success(`Account "${accData.name}" added`);
+    return newAccount;
+  };
+
+  const updateAccount = async (id: string, updates: Partial<Account>) => {
+    setAccounts((prev) => prev.map((a) => (a.id === id ? { ...a, ...updates } : a)));
+    toast.success('Account updated');
+  };
+
+  const deleteAccount = async (id: string) => {
+    setAccounts((prev) => prev.filter((a) => a.id !== id));
+    toast.info('Account removed');
+  };
+
+  const transferBetweenAccounts = async (
+    fromId: string,
+    toId: string,
+    amount: number,
+    note?: string
+  ) => {
+    if (amount <= 0) {
+      toast.error('Please enter a valid transfer amount');
+      return;
+    }
+    const fromAcc = accounts.find((a) => a.id === fromId);
+    const toAcc = accounts.find((a) => a.id === toId);
+    if (!fromAcc || !toAcc) {
+      toast.error('Invalid source or destination account');
+      return;
+    }
+
+    setAccounts((prev) =>
+      prev.map((acc) => {
+        if (acc.id === fromId) {
+          return { ...acc, balance: acc.balance - amount };
+        }
+        if (acc.id === toId) {
+          return {
+            ...acc,
+            balance: acc.type === 'credit_card' ? Math.max(0, acc.balance - amount) : acc.balance + amount,
+          };
+        }
+        return acc;
+      })
+    );
+
+    toast.success(
+      `Transferred ₹${amount.toLocaleString('en-IN')} from ${fromAcc.name} to ${toAcc.name}`
+    );
+  };
+
+  // Gold Assets
+  const addGoldAsset = async (assetData: Omit<GoldAsset, 'id'>) => {
+    const newGold: GoldAsset = {
+      ...assetData,
+      id: `gold-${Date.now()}`,
+      user_id: user?.id || 'usr-pilot-01',
+    };
+    setGoldAssets((prev) => [newGold, ...prev]);
+    toast.success(`Gold holding "${assetData.name}" added`);
+    return newGold;
+  };
+
+  const deleteGoldAsset = async (id: string) => {
+    setGoldAssets((prev) => prev.filter((g) => g.id !== id));
+    toast.info('Gold asset removed');
+  };
+
   const resetToDemoData = () => {
     setTransactions(INITIAL_TRANSACTIONS);
     setCategories(INITIAL_CATEGORIES);
@@ -529,6 +640,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setGoals(INITIAL_GOALS);
     setRecurringItems(INITIAL_RECURRING);
     setChitFunds(INITIAL_CHIT_FUNDS);
+    setAccounts(INITIAL_ACCOUNTS);
+    setGoldAssets(INITIAL_GOLD_ASSETS);
     toast.info('Restored realistic demo Indian transactions & data');
   };
 
@@ -599,6 +712,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         goals,
         recurringItems,
         chitFunds,
+        accounts,
+        goldAssets,
         isAddTxOpen,
         setIsAddTxOpen,
         isSmartPasteOpen,
@@ -609,6 +724,12 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setReceiptModalUrl,
         prefilledTxData,
         setPrefilledTxData,
+        addAccount,
+        updateAccount,
+        deleteAccount,
+        transferBetweenAccounts,
+        addGoldAsset,
+        deleteGoldAsset,
         addTransaction,
         updateTransaction,
         deleteTransaction,

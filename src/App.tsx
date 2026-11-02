@@ -13,6 +13,7 @@ import { HouseholdPage } from '@/pages/HouseholdPage';
 import { GoalsPage } from '@/pages/GoalsPage';
 import { RecurringPage } from '@/pages/RecurringPage';
 import { InsightsPage } from '@/pages/InsightsPage';
+import { AccountsPage } from '@/pages/AccountsPage';
 import { MorePage } from '@/pages/MorePage';
 import { AuthPage } from '@/pages/AuthPage';
 import { AddTransactionModal } from '@/components/transactions/AddTransactionModal';
@@ -85,6 +86,7 @@ const AppContent: React.FC<{ darkMode: boolean; setDarkMode: (v: boolean) => voi
             <Route path="/household" element={<HouseholdPage />} />
             <Route path="/goals" element={<GoalsPage />} />
             <Route path="/recurring" element={<RecurringPage />} />
+            <Route path="/accounts" element={<AccountsPage />} />
             <Route path="/insights" element={<InsightsPage />} />
             <Route
               path="/more"

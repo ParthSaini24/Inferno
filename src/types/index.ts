@@ -59,6 +59,7 @@ export interface UserProfile {
   full_name: string;
   avatar_url?: string | null;
   currency: string; // 'INR'
+  upi_id?: string; // e.g. 'parth@okaxis'
   created_at: string;
 }
 
@@ -77,7 +78,48 @@ export interface HouseholdMember {
   avatar_url?: string;
   role: 'owner' | 'member';
   share_percent: number; // e.g. 50%
+  upi_id?: string; // e.g. 'rohan@okhdfcbank'
   created_at: string;
+}
+
+export type AccountType = 'bank' | 'cash' | 'wallet' | 'credit_card';
+
+export interface Account {
+  id: string;
+  user_id: string;
+  name: string;
+  type: AccountType;
+  bank_name?: string;
+  account_number_last4?: string;
+  balance: number; // current balance, or current outstanding on credit card
+  credit_limit?: number; // for credit card
+  billing_cycle_date?: number; // 1-31
+  payment_due_date?: number; // 1-31
+  color?: string;
+  is_primary?: boolean;
+  created_at?: string;
+}
+
+export interface AccountTransfer {
+  id: string;
+  user_id: string;
+  from_account_id: string;
+  to_account_id: string;
+  amount: number;
+  date: string;
+  note?: string;
+  created_at?: string;
+}
+
+export interface GoldAsset {
+  id: string;
+  user_id: string;
+  name: string;
+  type: 'physical' | 'digital' | 'sgb';
+  weight_grams: number;
+  purchase_price_per_gram: number;
+  purchase_date: string;
+  notes?: string;
 }
 
 export interface Budget {

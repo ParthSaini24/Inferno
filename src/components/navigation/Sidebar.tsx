@@ -14,6 +14,7 @@ import {
   FileSpreadsheet,
   Wallet,
   LogOut,
+  Landmark,
 } from 'lucide-react';
 import { useFinance } from '@/context/FinanceContext';
 import { useAuth } from '@/context/AuthContext';
@@ -23,6 +24,7 @@ const NAV_ITEMS = [
   { to: '/', label: 'Home', icon: Home, badge: '' },
   { to: '/transactions', label: 'Transactions', icon: ArrowLeftRight, badge: '' },
   { to: '/budgets', label: 'Budgets', icon: PieChart, badge: '' },
+  { to: '/accounts', label: 'Accounts & Cards', icon: Landmark, badge: '' },
   { to: '/household', label: 'Household', icon: Users2, badge: '' },
   { to: '/goals', label: 'Goals & Chits', icon: Target, badge: 'New' },
   { to: '/recurring', label: 'EMIs & Bills', icon: Repeat, badge: '' },
