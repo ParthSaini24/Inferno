@@ -14,12 +14,15 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode }) => {
   const { household, user, signOut } = useAuth();
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between">
+    <header className="sticky top-0 z-30 w-full phos-glass border-b border-slate-200/80 dark:border-slate-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between transition-colors duration-200">
       {/* Mobile Branding / Desktop Title */}
       <div className="flex items-center gap-3">
         <div className="sm:hidden flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white font-extrabold text-sm shadow-sm">
-            ₹
+          <div className="relative w-8 h-8 flex items-center justify-center">
+            <div className="absolute inset-0 rounded-xl border border-teal-500/30 animate-phos-orbit pointer-events-none" />
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white font-extrabold text-sm shadow-sm">
+              ₹
+            </div>
           </div>
           <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">
             PaisaPilot
@@ -27,15 +30,21 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode }) => {
         </div>
 
         {/* Household Pill */}
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 dark:bg-teal-950/60 border border-teal-200/80 dark:border-teal-800/60 text-xs font-semibold text-teal-800 dark:text-teal-300">
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50/80 dark:bg-teal-950/60 border border-teal-200/80 dark:border-teal-800/60 text-xs font-semibold text-teal-800 dark:text-teal-300 shadow-2xs">
           <Users className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
           <span>{household?.name || 'Indian Household'}</span>
         </div>
 
         {/* Current Month Badge */}
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/80 text-xs font-semibold text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100/80 dark:bg-slate-800/80 text-xs font-semibold text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60">
           <Calendar className="w-3.5 h-3.5 text-slate-400" />
           <span>Nov 2026</span>
+        </div>
+
+        {/* Phosdeep HUD Readout Status Pill */}
+        <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100/70 dark:bg-slate-800/70 border border-slate-200/50 dark:border-slate-700/50 text-[10px] font-mono tracking-wider text-slate-500 dark:text-slate-400">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 hud-blink" />
+          <span>LEDGER // ACTIVE</span>
         </div>
       </div>
 

@@ -98,13 +98,23 @@ export const RecurringPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Hero Monthly Commitment Card */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 text-white border border-teal-900/60 shadow-xl space-y-4 relative overflow-hidden">
+      {/* Hero Monthly Commitment Card (Phosdeep Liquid Glass & Aurora Bloom) */}
+      <div className="phos-card p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-950 via-teal-950 to-slate-900 text-white border border-teal-500/20 shadow-2xl shadow-teal-950/40 space-y-4 relative overflow-hidden">
+        <div className="phos-corner-tl" />
+        <div className="phos-corner-tr" />
+        <div className="phos-corner-bl" />
+        <div className="phos-corner-br" />
+
+        {/* Ambient Drifting Aurora Blobs */}
+        <div className="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-teal-500/15 blur-3xl pointer-events-none animate-aurora-1" />
+        <div className="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-emerald-400/15 blur-3xl pointer-events-none animate-aurora-2" />
+
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-1">
-            <span className="text-xs text-teal-300 uppercase font-bold tracking-wider flex items-center gap-1.5">
+            <span className="text-xs text-teal-300 uppercase font-mono tracking-wider flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-teal-400" />
-              Total Monthly Fixed Outflow
+              <span>Total Monthly Fixed Outflow</span>
+              <span className="w-2 h-2 rounded-full bg-teal-400 hud-blink shadow-xs shadow-teal-400 ml-1" />
             </span>
             <div className="text-3xl sm:text-5xl font-black rupee-num">
               {formatINR(totalMonthlyCommitment)}
@@ -115,7 +125,7 @@ export const RecurringPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 text-center min-w-[180px]">
+          <div className="p-4 rounded-2xl bg-white/10 dark:bg-slate-900/60 backdrop-blur-md border border-white/15 text-center min-w-[180px] shadow-sm">
             <span className="text-xs text-teal-300 font-semibold">Active Schedules</span>
             <p className="text-2xl font-black text-white mt-1">
               {recurringItems.length} items
@@ -158,12 +168,14 @@ export const RecurringPage: React.FC = () => {
           return (
             <div
               key={r.id}
-              className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition shadow-sm space-y-4 group ${
+              className={`phos-card p-5 rounded-3xl bg-white dark:bg-slate-900 border transition shadow-sm space-y-4 group relative ${
                 isUrgent
                   ? 'border-amber-300 dark:border-amber-900/60 ring-1 ring-amber-500/20'
-                  : 'border-slate-200/80 dark:border-slate-800 hover:border-teal-400'
+                  : 'border-slate-200/80 dark:border-slate-800'
               }`}
             >
+              <div className="phos-corner-tl" />
+              <div className="phos-corner-br" />
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">

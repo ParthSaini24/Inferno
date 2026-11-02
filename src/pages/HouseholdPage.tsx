@@ -142,13 +142,23 @@ export const HouseholdPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Hero Shared Ledger Card */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-900/60 shadow-xl space-y-4 relative overflow-hidden">
+      {/* Hero Shared Ledger Card (Phosdeep Liquid Glass & Aurora Bloom) */}
+      <div className="phos-card p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white border border-indigo-500/20 shadow-2xl shadow-indigo-950/40 space-y-4 relative overflow-hidden">
+        <div className="phos-corner-tl" />
+        <div className="phos-corner-tr" />
+        <div className="phos-corner-bl" />
+        <div className="phos-corner-br" />
+
+        {/* Ambient Drifting Aurora Blobs */}
+        <div className="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none animate-aurora-1" />
+        <div className="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-teal-400/15 blur-3xl pointer-events-none animate-aurora-2" />
+
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-1">
-            <span className="text-xs text-indigo-300 uppercase font-bold tracking-wider flex items-center gap-1.5">
+            <span className="text-xs text-indigo-300 uppercase font-mono tracking-wider flex items-center gap-1.5">
               <Users2 className="w-3.5 h-3.5 text-indigo-400" />
-              Total Shared Household Expenses (Nov 2026)
+              <span>Total Shared Household Expenses (Nov 2026)</span>
+              <span className="w-2 h-2 rounded-full bg-indigo-400 hud-blink shadow-xs shadow-indigo-400 ml-1" />
             </span>
             <div className="text-3xl sm:text-5xl font-black rupee-num">
               {formatINR(totalSharedSpend)}
@@ -158,7 +168,7 @@ export const HouseholdPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 text-center min-w-[210px] space-y-1.5">
+          <div className="p-4 rounded-2xl bg-white/10 dark:bg-slate-900/60 backdrop-blur-md border border-white/15 text-center min-w-[210px] space-y-1.5 shadow-sm">
             <span className="text-xs text-emerald-300 font-semibold uppercase tracking-wider">
               Settlement Balance
             </span>
@@ -191,7 +201,9 @@ export const HouseholdPage: React.FC = () => {
       </div>
 
       {/* Household Members & Individual Shares */}
-      <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm space-y-4">
+      <div className="phos-card rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm space-y-4 relative">
+        <div className="phos-corner-tl" />
+        <div className="phos-corner-tr" />
         <div className="flex items-center justify-between">
           <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
             Household Members & Balances

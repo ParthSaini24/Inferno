@@ -145,16 +145,22 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Hero Financial Health Card (Calm Teal/Emerald Fintech Style) */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-900 via-teal-800 to-emerald-900 text-white p-6 sm:p-8 shadow-xl shadow-teal-950/30">
-        <div className="absolute -right-12 -top-12 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute -left-12 -bottom-12 w-64 h-64 rounded-full bg-teal-400/10 blur-3xl pointer-events-none" />
+      {/* Hero Financial Health Card (Phosdeep Liquid Glass & Aurora Bloom) */}
+      <div className="phos-card relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-950 via-teal-900 to-emerald-950 text-white p-6 sm:p-8 shadow-2xl shadow-teal-950/40 border border-teal-500/20">
+        <div className="phos-corner-tl" />
+        <div className="phos-corner-tr" />
+        <div className="phos-corner-bl" />
+        <div className="phos-corner-br" />
+
+        {/* Ambient Drifting Aurora Blobs */}
+        <div className="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none animate-aurora-1" />
+        <div className="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-teal-400/20 blur-3xl pointer-events-none animate-aurora-2" />
 
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-teal-200/90 text-xs font-semibold uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-teal-300 text-xs font-mono uppercase tracking-wider">
               <span>This Month Remaining Cashflow</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-400 hud-blink shadow-xs shadow-emerald-400" />
             </div>
             <div className="text-3xl sm:text-5xl font-black tracking-tight rupee-num">
               {formatINR(stats.remainingThisMonth)}
@@ -170,7 +176,7 @@ export const DashboardPage: React.FC = () => {
 
           {/* Spent vs Income breakdown pills */}
           <div className="grid grid-cols-2 gap-3 min-w-[280px]">
-            <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
+            <div className="p-3.5 rounded-2xl bg-white/10 dark:bg-slate-900/50 backdrop-blur-md border border-white/15 dark:border-white/10 shadow-sm transition hover:bg-white/15">
               <div className="flex items-center gap-1.5 text-xs text-rose-300 font-semibold mb-1">
                 <TrendingDown className="w-3.5 h-3.5" />
                 <span>Total Spent</span>
@@ -180,7 +186,7 @@ export const DashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
+            <div className="p-3.5 rounded-2xl bg-white/10 dark:bg-slate-900/50 backdrop-blur-md border border-white/15 dark:border-white/10 shadow-sm transition hover:bg-white/15">
               <div className="flex items-center gap-1.5 text-xs text-emerald-300 font-semibold mb-1">
                 <TrendingUp className="w-3.5 h-3.5" />
                 <span>Total Income</span>
@@ -226,13 +232,15 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Quick Action Shortcuts Grid */}
+      {/* Quick Action Shortcuts Grid (Phosdeep Tactile Cards) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <button
           onClick={() => setIsSmartPasteOpen(true)}
-          className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-teal-400 dark:hover:border-teal-500 transition shadow-sm text-left group"
+          className="phos-card p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-left group shadow-xs"
         >
-          <div className="w-10 h-10 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+          <div className="phos-corner-tl" />
+          <div className="phos-corner-br" />
+          <div className="w-10 h-10 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <Sparkles className="w-5 h-5" />
           </div>
           <h3 className="text-xs font-bold text-slate-900 dark:text-white">
@@ -243,9 +251,11 @@ export const DashboardPage: React.FC = () => {
 
         <button
           onClick={handleOpenAdd}
-          className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition shadow-sm text-left group"
+          className="phos-card p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-left group shadow-xs"
         >
-          <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+          <div className="phos-corner-tl" />
+          <div className="phos-corner-br" />
+          <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <Plus className="w-5 h-5 stroke-[2.5]" />
           </div>
           <h3 className="text-xs font-bold text-slate-900 dark:text-white">
@@ -256,9 +266,11 @@ export const DashboardPage: React.FC = () => {
 
         <Link
           to="/goals"
-          className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-amber-400 dark:hover:border-amber-500 transition shadow-sm text-left group block"
+          className="phos-card p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-left group block shadow-xs"
         >
-          <div className="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+          <div className="phos-corner-tl" />
+          <div className="phos-corner-br" />
+          <div className="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <Target className="w-5 h-5" />
           </div>
           <h3 className="text-xs font-bold text-slate-900 dark:text-white">
@@ -269,9 +281,11 @@ export const DashboardPage: React.FC = () => {
 
         <Link
           to="/household"
-          className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500 transition shadow-sm text-left group block"
+          className="phos-card p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-left group block shadow-xs"
         >
-          <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+          <div className="phos-corner-tl" />
+          <div className="phos-corner-br" />
+          <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <Users className="w-5 h-5" />
           </div>
           <h3 className="text-xs font-bold text-slate-900 dark:text-white">
@@ -283,7 +297,9 @@ export const DashboardPage: React.FC = () => {
 
       {/* Phase 2 Spotlight: Upcoming EMIs & Bills */}
       {upcomingBills.length > 0 && (
-        <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm space-y-3">
+        <div className="phos-card rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm space-y-3 relative">
+          <div className="phos-corner-tl" />
+          <div className="phos-corner-tr" />
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-rose-500" />
@@ -304,7 +320,7 @@ export const DashboardPage: React.FC = () => {
             {upcomingBills.map((bill: RecurringItem) => (
               <div
                 key={bill.id}
-                className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2"
+                className="phos-card p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2 relative"
               >
                 <div>
                   <div className="flex items-center justify-between">
@@ -339,7 +355,9 @@ export const DashboardPage: React.FC = () => {
       {/* Visual Analytics Row: Payment Modes & Top Categories */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Payment Modes Chart */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        <div className="phos-card p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm relative">
+          <div className="phos-corner-tl" />
+          <div className="phos-corner-tr" />
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-sm font-bold text-slate-900 dark:text-white">
@@ -409,7 +427,9 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Top Spend Categories */}
-        <div className="lg:col-span-2 p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+        <div className="phos-card lg:col-span-2 p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between relative">
+          <div className="phos-corner-tl" />
+          <div className="phos-corner-tr" />
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -470,7 +490,9 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* Recent 5 Transactions */}
-      <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
+      <div className="phos-card rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden relative">
+        <div className="phos-corner-tl" />
+        <div className="phos-corner-tr" />
         <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
           <div>
             <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">

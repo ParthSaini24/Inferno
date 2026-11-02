@@ -61,12 +61,20 @@ export const AuthPage: React.FC<AuthPageProps> = ({ darkMode, setDarkMode }) => 
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between font-sans transition-colors duration-200 phos-grid relative overflow-hidden">
+      {/* Ambient Drifting Aurora Blobs */}
+      <div className="absolute top-1/4 -left-20 w-96 h-96 rounded-full bg-teal-500/10 dark:bg-teal-500/20 blur-3xl pointer-events-none animate-aurora-1" />
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 blur-3xl pointer-events-none animate-aurora-2" />
+
       {/* Top Navbar */}
-      <header className="px-6 py-4 flex items-center justify-between max-w-6xl w-full mx-auto">
+      <header className="px-6 py-4 flex items-center justify-between max-w-6xl w-full mx-auto relative z-10">
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white font-black text-xl shadow-md shadow-teal-600/30">
-            ₹
+          <div className="relative w-10 h-10 flex items-center justify-center">
+            {/* Phosdeep Orbital Halo */}
+            <div className="absolute -inset-1 rounded-2xl border border-teal-500/40 animate-phos-orbit pointer-events-none" />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white font-black text-xl shadow-md shadow-teal-600/30 relative z-10">
+              ₹
+            </div>
           </div>
           <div>
             <span className="font-extrabold text-lg tracking-tight text-slate-900 dark:text-white">
@@ -89,7 +97,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ darkMode, setDarkMode }) => 
       </header>
 
       {/* Main Split Layout */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col lg:flex-row items-center justify-center gap-12">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col lg:flex-row items-center justify-center gap-12 relative z-10">
         {/* Left column: Brand Narrative & Indian Finance Highlights */}
         <div className="flex-1 space-y-6 text-center lg:text-left max-w-lg lg:max-w-none">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 dark:bg-teal-950/60 border border-teal-200/80 dark:border-teal-800/60 text-xs font-bold text-teal-800 dark:text-teal-300">
@@ -106,21 +114,27 @@ export const AuthPage: React.FC<AuthPageProps> = ({ darkMode, setDarkMode }) => 
             shared household rent & grocery ledger, Diwali festival envelopes, and Kameti chit fund tracking.
           </p>
 
-          {/* 3 Value Pillars */}
+          {/* 3 Value Pillars (Phosdeep Tactile Cards) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-left">
-            <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div className="phos-card p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs relative">
+              <div className="phos-corner-tl" />
+              <div className="phos-corner-br" />
               <Smartphone className="w-5 h-5 text-emerald-500 mb-2" />
               <p className="text-xs font-bold text-slate-900 dark:text-white">Under 5s Entry</p>
               <p className="text-[11px] text-slate-400 mt-0.5">UPI, Cash & SMS parse</p>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div className="phos-card p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs relative">
+              <div className="phos-corner-tl" />
+              <div className="phos-corner-br" />
               <Users2 className="w-5 h-5 text-indigo-500 mb-2" />
               <p className="text-xs font-bold text-slate-900 dark:text-white">Household Split</p>
               <p className="text-[11px] text-slate-400 mt-0.5">Who owes whom ledger</p>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div className="phos-card p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs relative">
+              <div className="phos-corner-tl" />
+              <div className="phos-corner-br" />
               <PieChart className="w-5 h-5 text-teal-500 mb-2" />
               <p className="text-xs font-bold text-slate-900 dark:text-white">Rollover Envelopes</p>
               <p className="text-[11px] text-slate-400 mt-0.5">Festivals & groceries</p>
@@ -130,7 +144,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({ darkMode, setDarkMode }) => 
 
         {/* Right column: Auth Card */}
         <div className="w-full max-w-md">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 space-y-6">
+          <div className="phos-card bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 space-y-6 relative">
+            <div className="phos-corner-tl" />
+            <div className="phos-corner-tr" />
+            <div className="phos-corner-bl" />
+            <div className="phos-corner-br" />
             {/* Header / Tabs */}
             <div className="space-y-4">
               <div className="flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl">

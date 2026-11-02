@@ -12,7 +12,7 @@ const NAV_ITEMS = [
 
 export const BottomNav: React.FC = () => {
   return (
-    <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800/80 safe-area-pb">
+    <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-30 phos-glass border-t border-slate-200/80 dark:border-white/10 safe-area-pb">
       <div className="flex items-center justify-around h-16 px-2">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
@@ -35,7 +35,7 @@ export const BottomNav: React.FC = () => {
                   </div>
                   <span className="truncate">{item.label}</span>
                   {isActive && (
-                    <span className="w-1 h-1 rounded-full bg-teal-600 dark:bg-teal-400 -mt-0.5"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-500 dark:bg-teal-400 -mt-0.5 shadow-xs shadow-teal-400 animate-pulse" />
                   )}
                 </>
               )}

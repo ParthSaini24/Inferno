@@ -99,13 +99,23 @@ export const BudgetsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Hero Overview Card */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-teal-900 via-teal-800 to-emerald-900 text-white shadow-xl relative overflow-hidden">
+      {/* Hero Overview Card (Phosdeep Liquid Glass & Aurora Bloom) */}
+      <div className="phos-card p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-teal-950 via-teal-900 to-emerald-950 text-white shadow-2xl shadow-teal-950/40 border border-teal-500/20 relative overflow-hidden">
+        <div className="phos-corner-tl" />
+        <div className="phos-corner-tr" />
+        <div className="phos-corner-bl" />
+        <div className="phos-corner-br" />
+
+        {/* Ambient Drifting Aurora Blobs */}
+        <div className="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none animate-aurora-1" />
+        <div className="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-teal-400/15 blur-3xl pointer-events-none animate-aurora-2" />
+
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-1">
-            <span className="text-xs text-teal-200 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+            <span className="text-xs text-teal-300 font-mono uppercase tracking-wider flex items-center gap-1.5">
               <PieChart className="w-3.5 h-3.5 text-emerald-400" />
-              Monthly Budget Utilization ({selectedMonth})
+              <span>Monthly Budget Utilization ({selectedMonth})</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 hud-blink shadow-xs shadow-emerald-400 ml-1" />
             </span>
             <div className="text-3xl sm:text-5xl font-black rupee-num">
               {formatINR(totalSpentInBudgets)}
@@ -174,12 +184,14 @@ export const BudgetsPage: React.FC = () => {
               return (
                 <div
                   key={b.id}
-                  className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all shadow-sm space-y-3.5 group ${
+                  className={`phos-card p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all shadow-sm space-y-3.5 group relative ${
                     isOver
                       ? 'border-rose-300 dark:border-rose-900/60 ring-1 ring-rose-500/20'
-                      : 'border-slate-200/80 dark:border-slate-800 hover:border-teal-400'
+                      : 'border-slate-200/80 dark:border-slate-800'
                   }`}
                 >
+                  <div className="phos-corner-tl" />
+                  <div className="phos-corner-br" />
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                       <CategoryIcon

@@ -105,13 +105,23 @@ export const GoalsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Hero Savings Milestone Card */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 text-white shadow-xl relative overflow-hidden">
+      {/* Hero Savings Milestone Card (Phosdeep Liquid Glass & Aurora Bloom) */}
+      <div className="phos-card p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 text-white shadow-2xl shadow-emerald-950/40 border border-emerald-500/20 relative overflow-hidden">
+        <div className="phos-corner-tl" />
+        <div className="phos-corner-tr" />
+        <div className="phos-corner-bl" />
+        <div className="phos-corner-br" />
+
+        {/* Ambient Drifting Aurora Blobs */}
+        <div className="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none animate-aurora-1" />
+        <div className="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-teal-400/15 blur-3xl pointer-events-none animate-aurora-2" />
+
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-1">
-            <span className="text-xs text-emerald-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+            <span className="text-xs text-emerald-300 font-mono uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-              Total Accumulated Savings Across Goals
+              <span>Total Accumulated Savings Across Goals</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 hud-blink shadow-xs shadow-emerald-400 ml-1" />
             </span>
             <div className="text-3xl sm:text-5xl font-black rupee-num">
               {formatINR(totalSaved)}
@@ -161,8 +171,10 @@ export const GoalsPage: React.FC = () => {
             return (
               <div
                 key={g.id}
-                className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4 group hover:border-emerald-400 transition"
+                className="phos-card p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4 group relative"
               >
+                <div className="phos-corner-tl" />
+                <div className="phos-corner-br" />
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">

@@ -48,11 +48,14 @@ export const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="hidden sm:flex flex-col w-64 h-screen sticky top-0 bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800/80 px-4 py-5 z-30 select-none overflow-y-auto">
+    <aside className="hidden sm:flex flex-col w-64 h-screen sticky top-0 phos-glass border-r border-slate-200/80 dark:border-slate-800/80 px-4 py-5 z-30 select-none overflow-y-auto transition-colors duration-200">
       {/* Brand Header */}
       <div className="flex items-center gap-3 px-2 mb-5">
-        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-teal-600/30 font-black text-xl">
-          ₹
+        <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+          <div className="absolute -inset-1 rounded-2xl border border-teal-500/40 animate-phos-orbit pointer-events-none" />
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-teal-600/30 font-black text-xl">
+            ₹
+          </div>
         </div>
         <div>
           <div className="flex items-center gap-1.5">
@@ -106,10 +109,10 @@ export const Sidebar: React.FC = () => {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `flex items-center justify-between px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all ${
+                `phos-nav-lens flex items-center justify-between px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all ${
                   isActive
-                    ? 'bg-teal-500/10 text-teal-700 dark:text-teal-400 font-bold'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-teal-500/15 text-teal-700 dark:text-teal-300 font-bold border-l-2 border-teal-500 shadow-2xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`
               }
             >

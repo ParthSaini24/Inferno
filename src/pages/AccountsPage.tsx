@@ -132,10 +132,12 @@ export const AccountsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 3 Metric Cards */}
+      {/* 3 Metric Cards (Phosdeep Dynamic System) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Liquid Balance */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
+        <div className="phos-card p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2 relative">
+          <div className="phos-corner-tl" />
+          <div className="phos-corner-br" />
           <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400">
             <span>Liquid Balance (Banks & Cash)</span>
             <div className="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center">
@@ -151,7 +153,9 @@ export const AccountsPage: React.FC = () => {
         </div>
 
         {/* Credit Card Spends */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
+        <div className="phos-card p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2 relative">
+          <div className="phos-corner-tl" />
+          <div className="phos-corner-br" />
           <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400">
             <span>Credit Card Outstanding</span>
             <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
@@ -182,7 +186,9 @@ export const AccountsPage: React.FC = () => {
         </div>
 
         {/* Gold & SGB Valuation */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
+        <div className="phos-card p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2 relative">
+          <div className="phos-corner-tl" />
+          <div className="phos-corner-br" />
           <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400">
             <span>Gold & SGB Holdings</span>
             <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-300 flex items-center justify-center">
@@ -243,8 +249,12 @@ export const AccountsPage: React.FC = () => {
               return (
                 <div
                   key={card.id}
-                  className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4 relative overflow-hidden"
+                  className="phos-card p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4 relative overflow-hidden"
                 >
+                  <div className="phos-corner-tl" />
+                  <div className="phos-corner-tr" />
+                  <div className="phos-corner-bl" />
+                  <div className="phos-corner-br" />
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-11 h-11 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black">
@@ -360,8 +370,10 @@ export const AccountsPage: React.FC = () => {
               return (
                 <div
                   key={acc.id}
-                  className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3"
+                  className="phos-card p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 relative"
                 >
+                  <div className="phos-corner-tl" />
+                  <div className="phos-corner-br" />
                   <div className="flex items-start justify-between">
                     <div className="w-10 h-10 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center">
                       <Icon className="w-5 h-5" />
