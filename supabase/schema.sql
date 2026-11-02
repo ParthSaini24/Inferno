@@ -44,36 +44,54 @@ CREATE TABLE IF NOT EXISTS public.household_members (
 
 ALTER TABLE public.household_members ENABLE ROW LEVEL SECURITY;
 
+-- Helper functions with SECURITY DEFINER to eliminate RLS infinite recursion
+CREATE OR REPLACE FUNCTION public.is_household_member(lookup_household_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+STABLE
+AS $$
+    SELECT EXISTS (
+        SELECT 1 FROM public.household_members
+        WHERE household_id = lookup_household_id
+        AND user_id = auth.uid()
+    );
+$$;
+
+CREATE OR REPLACE FUNCTION public.is_household_owner(lookup_household_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+STABLE
+AS $$
+    SELECT EXISTS (
+        SELECT 1 FROM public.household_members
+        WHERE household_id = lookup_household_id
+        AND user_id = auth.uid()
+        AND role = 'owner'
+    );
+$$;
+
+-- Household members policies (non-recursive)
 CREATE POLICY "Members can view household members"
     ON public.household_members FOR SELECT
     USING (
-        EXISTS (
-            SELECT 1 FROM public.household_members hm
-            WHERE hm.household_id = household_members.household_id
-            AND hm.user_id = auth.uid()
-        )
+        user_id = auth.uid() OR public.is_household_member(household_id)
     );
 
 CREATE POLICY "Owners can manage household members"
     ON public.household_members FOR ALL
     USING (
-        EXISTS (
-            SELECT 1 FROM public.household_members hm
-            WHERE hm.household_id = household_members.household_id
-            AND hm.user_id = auth.uid()
-            AND hm.role = 'owner'
-        )
+        user_id = auth.uid() OR public.is_household_owner(household_id)
     );
 
 -- Household policies
 CREATE POLICY "Users can view households they belong to"
     ON public.households FOR SELECT
     USING (
-        EXISTS (
-            SELECT 1 FROM public.household_members hm
-            WHERE hm.household_id = households.id
-            AND hm.user_id = auth.uid()
-        )
+        created_by = auth.uid() OR public.is_household_member(id)
     );
 
 CREATE POLICY "Users can create households"
@@ -100,11 +118,7 @@ CREATE POLICY "Users can view own or default categories"
     USING (
         is_default = true OR
         user_id = auth.uid() OR
-        EXISTS (
-            SELECT 1 FROM public.household_members hm
-            WHERE hm.household_id = categories.household_id
-            AND hm.user_id = auth.uid()
-        )
+        (household_id IS NOT NULL AND public.is_household_member(household_id))
     );
 
 CREATE POLICY "Users can insert custom categories"
@@ -143,11 +157,7 @@ CREATE POLICY "Users can view own or shared household transactions"
     ON public.transactions FOR SELECT
     USING (
         user_id = auth.uid() OR
-        (is_shared = true AND EXISTS (
-            SELECT 1 FROM public.household_members hm
-            WHERE hm.household_id = transactions.household_id
-            AND hm.user_id = auth.uid()
-        ))
+        (is_shared = true AND household_id IS NOT NULL AND public.is_household_member(household_id))
     );
 
 CREATE POLICY "Users can manage own transactions"
@@ -232,11 +242,9 @@ ALTER TABLE public.settlements ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Household members can view settlements"
     ON public.settlements FOR SELECT
     USING (
-        EXISTS (
-            SELECT 1 FROM public.household_members hm
-            WHERE hm.household_id = settlements.household_id
-            AND hm.user_id = auth.uid()
-        )
+        from_user = auth.uid() OR
+        to_user = auth.uid() OR
+        public.is_household_member(household_id)
     );
 
 -- SEED SCRIPT FOR DEFAULT CATEGORIES

@@ -1,13 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Retrieve credentials from Vite env or fallback
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const rawUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+// Automatically sanitize URL to base project URL (remove /rest/v1 or trailing slashes)
+const supabaseUrl = rawUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '');
+const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl && 
   supabaseAnonKey && 
-  supabaseUrl !== 'https://your-project.supabase.co'
+  supabaseUrl !== 'https://your-project.supabase.co' &&
+  !supabaseUrl.includes('your-project')
 );
 
 export const supabase = isSupabaseConfigured
