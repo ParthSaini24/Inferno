@@ -70,9 +70,13 @@ export interface Household {
 }
 
 export interface HouseholdMember {
+  id: string;
   household_id: string;
   user_id: string;
+  name: string;
+  avatar_url?: string;
   role: 'owner' | 'member';
+  share_percent: number; // e.g. 50%
   created_at: string;
 }
 
@@ -95,9 +99,11 @@ export interface RecurringItem {
   amount: number;
   type: 'rent' | 'subscription' | 'emi' | 'insurance' | 'sip' | 'other';
   frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
-  next_due_date: string;
+  next_due_date: string; // YYYY-MM-DD
   remind_days_before: number;
   active: boolean;
+  category_id?: string;
+  payment_mode?: PaymentMode;
   created_at?: string;
 }
 
@@ -108,6 +114,24 @@ export interface Goal {
   target_amount: number;
   saved_amount: number;
   target_date?: string;
+  category?: 'festival' | 'emergency' | 'gold' | 'travel' | 'education' | 'gadget' | 'general';
+  created_at?: string;
+}
+
+export interface ChitFund {
+  id: string;
+  user_id: string;
+  household_id?: string | null;
+  name: string; // e.g., "Shree Ganesh Monthly Chit" or "Society Kameti 1 Lakh"
+  monthly_contribution: number; // e.g. 5000
+  total_months: number; // e.g. 20
+  current_month: number; // e.g. 8
+  total_chit_amount: number; // e.g. 100000
+  dividend_earned: number; // e.g. 3500
+  taken_in_month?: number | null; // e.g. Month 12 when auctioned/claimed
+  payout_received?: number | null; // e.g. 88000
+  status: 'active' | 'claimed' | 'completed';
+  next_due_date: string;
   created_at?: string;
 }
 
@@ -116,9 +140,12 @@ export interface Settlement {
   household_id: string;
   from_user: string;
   to_user: string;
+  from_name: string;
+  to_name: string;
   amount: number;
   date: string;
   note?: string;
+  payment_mode?: PaymentMode;
   created_at?: string;
 }
 

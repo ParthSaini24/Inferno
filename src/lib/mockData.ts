@@ -1,4 +1,15 @@
-import { Category, Transaction, UserProfile, Household, Budget, RecurringItem, Goal } from '@/types';
+import {
+  Category,
+  Transaction,
+  UserProfile,
+  Household,
+  HouseholdMember,
+  Budget,
+  RecurringItem,
+  Goal,
+  ChitFund,
+  Settlement,
+} from '@/types';
 
 export const INITIAL_CATEGORIES: Category[] = [
   { id: 'cat-1', name: 'Food & Dining', icon: 'Utensils', color: '#f97316', type: 'expense', is_default: true },
@@ -36,6 +47,29 @@ export const INITIAL_HOUSEHOLD: Household = {
   created_by: 'usr-pilot-01',
   created_at: '2026-10-01T00:00:00Z',
 };
+
+export const INITIAL_HOUSEHOLD_MEMBERS: HouseholdMember[] = [
+  {
+    id: 'hm-01',
+    household_id: 'hh-01',
+    user_id: 'usr-pilot-01',
+    name: 'Parth Saini',
+    avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    role: 'owner',
+    share_percent: 50,
+    created_at: '2026-10-01T00:00:00Z',
+  },
+  {
+    id: 'hm-02',
+    household_id: 'hh-01',
+    user_id: 'usr-rohan-02',
+    name: 'Rohan Verma',
+    avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    role: 'member',
+    share_percent: 50,
+    created_at: '2026-10-05T00:00:00Z',
+  },
+];
 
 export const INITIAL_TRANSACTIONS: Transaction[] = [
   {
@@ -189,15 +223,18 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
 export const INITIAL_BUDGETS: Budget[] = [
   { id: 'b-1', user_id: 'usr-pilot-01', category_id: 'cat-1', month: '2026-11', amount: 8000, rollover: false },
   { id: 'b-2', user_id: 'usr-pilot-01', category_id: 'cat-2', month: '2026-11', amount: 12000, rollover: true },
-  { id: 'b-3', user_id: 'usr-pilot-01', category_id: 'cat-6', month: '2026-11', amount: 4500, rollover: false },
-  { id: 'b-4', user_id: 'usr-pilot-01', category_id: 'cat-5', month: '2026-11', amount: 5000, rollover: false },
-  { id: 'b-5', user_id: 'usr-pilot-01', category_id: 'cat-11', month: '2026-11', amount: 15000, rollover: false },
+  { id: 'b-3', user_id: 'usr-pilot-01', category_id: 'cat-3', month: '2026-11', amount: 25000, rollover: false },
+  { id: 'b-4', user_id: 'usr-pilot-01', category_id: 'cat-6', month: '2026-11', amount: 4500, rollover: false },
+  { id: 'b-5', user_id: 'usr-pilot-01', category_id: 'cat-5', month: '2026-11', amount: 5000, rollover: false },
+  { id: 'b-6', user_id: 'usr-pilot-01', category_id: 'cat-11', month: '2026-11', amount: 15000, rollover: true },
+  { id: 'b-7', user_id: 'usr-pilot-01', category_id: 'cat-7', month: '2026-11', amount: 10000, rollover: false },
 ];
 
 export const INITIAL_RECURRING: RecurringItem[] = [
   {
     id: 'rec-1',
     user_id: 'usr-pilot-01',
+    household_id: 'hh-01',
     name: '3BHK Flat Rent',
     amount: 24000,
     type: 'rent',
@@ -205,6 +242,8 @@ export const INITIAL_RECURRING: RecurringItem[] = [
     next_due_date: '2026-12-01',
     remind_days_before: 3,
     active: true,
+    category_id: 'cat-3',
+    payment_mode: 'upi',
   },
   {
     id: 'rec-2',
@@ -216,6 +255,8 @@ export const INITIAL_RECURRING: RecurringItem[] = [
     next_due_date: '2026-11-10',
     remind_days_before: 5,
     active: true,
+    category_id: 'cat-12',
+    payment_mode: 'netbanking',
   },
   {
     id: 'rec-3',
@@ -227,6 +268,49 @@ export const INITIAL_RECURRING: RecurringItem[] = [
     next_due_date: '2026-11-28',
     remind_days_before: 2,
     active: true,
+    category_id: 'cat-13',
+    payment_mode: 'netbanking',
+  },
+  {
+    id: 'rec-4',
+    user_id: 'usr-pilot-01',
+    household_id: 'hh-01',
+    name: 'Tata Power Electricity Bill',
+    amount: 2200,
+    type: 'subscription',
+    frequency: 'monthly',
+    next_due_date: '2026-11-15',
+    remind_days_before: 3,
+    active: true,
+    category_id: 'cat-6',
+    payment_mode: 'netbanking',
+  },
+  {
+    id: 'rec-5',
+    user_id: 'usr-pilot-01',
+    name: 'Netflix Premium 4K Family',
+    amount: 649,
+    type: 'subscription',
+    frequency: 'monthly',
+    next_due_date: '2026-11-22',
+    remind_days_before: 1,
+    active: true,
+    category_id: 'cat-10',
+    payment_mode: 'card',
+  },
+  {
+    id: 'rec-6',
+    user_id: 'usr-pilot-01',
+    household_id: 'hh-01',
+    name: 'Country Delight Milk Delivery',
+    amount: 2800,
+    type: 'subscription',
+    frequency: 'monthly',
+    next_due_date: '2026-11-30',
+    remind_days_before: 2,
+    active: true,
+    category_id: 'cat-2',
+    payment_mode: 'upi',
   },
 ];
 
@@ -238,6 +322,7 @@ export const INITIAL_GOALS: Goal[] = [
     target_amount: 50000,
     saved_amount: 38500,
     target_date: '2026-11-12',
+    category: 'festival',
   },
   {
     id: 'goal-2',
@@ -246,6 +331,7 @@ export const INITIAL_GOALS: Goal[] = [
     target_amount: 300000,
     saved_amount: 195000,
     target_date: '2027-03-31',
+    category: 'emergency',
   },
   {
     id: 'goal-3',
@@ -254,5 +340,66 @@ export const INITIAL_GOALS: Goal[] = [
     target_amount: 80000,
     saved_amount: 32000,
     target_date: '2027-06-15',
+    category: 'travel',
+  },
+  {
+    id: 'goal-4',
+    user_id: 'usr-pilot-01',
+    name: 'New Electric Scooter (Ola/Ather)',
+    target_amount: 140000,
+    saved_amount: 75000,
+    target_date: '2027-01-30',
+    category: 'gadget',
+  },
+];
+
+export const INITIAL_CHIT_FUNDS: ChitFund[] = [
+  {
+    id: 'chit-01',
+    user_id: 'usr-pilot-01',
+    household_id: 'hh-01',
+    name: 'Shree Ganesh 2-Lakh Chit Fund',
+    monthly_contribution: 10000,
+    total_months: 20,
+    current_month: 8,
+    total_chit_amount: 200000,
+    dividend_earned: 6800,
+    taken_in_month: null,
+    payout_received: null,
+    status: 'active',
+    next_due_date: '2026-11-15',
+    created_at: '2026-04-01T00:00:00Z',
+  },
+  {
+    id: 'chit-02',
+    user_id: 'usr-pilot-01',
+    household_id: 'hh-01',
+    name: 'Society Diwali Kameti',
+    monthly_contribution: 5000,
+    total_months: 10,
+    current_month: 9,
+    total_chit_amount: 50000,
+    dividend_earned: 2400,
+    taken_in_month: null,
+    payout_received: null,
+    status: 'active',
+    next_due_date: '2026-11-10',
+    created_at: '2026-03-01T00:00:00Z',
+  },
+];
+
+export const INITIAL_SETTLEMENTS: Settlement[] = [
+  {
+    id: 'stl-01',
+    household_id: 'hh-01',
+    from_user: 'usr-rohan-02',
+    to_user: 'usr-pilot-01',
+    from_name: 'Rohan Verma',
+    to_name: 'Parth Saini',
+    amount: 12000,
+    date: '2026-10-31',
+    note: 'October apartment rent share paid via GPay UPI',
+    payment_mode: 'upi',
+    created_at: '2026-10-31T18:00:00Z',
   },
 ];

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useFinance } from '@/context/FinanceContext';
+import { RecurringItem } from '@/types';
 import { formatINR, formatDateIndian, formatRelativeDate } from '@/utils/formatters';
 import { CategoryIcon } from '@/components/common/CategoryIcon';
 import { PaymentModeBadge } from '@/components/common/PaymentModeBadge';
@@ -19,6 +20,10 @@ import {
   CreditCard,
   ChevronRight,
   Flame,
+  Target,
+  Repeat,
+  CheckCircle2,
+  Clock,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -42,6 +47,9 @@ export const DashboardPage: React.FC = () => {
     setReceiptModalUrl,
     setPrefilledTxData,
     transactions,
+    goals,
+    recurringItems,
+    markRecurringAsPaid,
   } = useFinance();
 
   const handleOpenAdd = () => {
@@ -96,6 +104,14 @@ export const DashboardPage: React.FC = () => {
       .slice(0, 4);
   }, [transactions, getCategoryById]);
 
+  // Next 2 upcoming recurring items
+  const upcomingBills = useMemo(() => {
+    return [...recurringItems]
+      .filter((r) => r.active)
+      .sort((a, b) => new Date(a.next_due_date).getTime() - new Date(b.next_due_date).getTime())
+      .slice(0, 3);
+  }, [recurringItems]);
+
   return (
     <div className="space-y-6 pb-24 sm:pb-12 animate-in fade-in duration-300">
       {/* Welcome Banner / Overview */}
@@ -131,7 +147,6 @@ export const DashboardPage: React.FC = () => {
 
       {/* Hero Financial Health Card (Calm Teal/Emerald Fintech Style) */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-900 via-teal-800 to-emerald-900 text-white p-6 sm:p-8 shadow-xl shadow-teal-950/30">
-        {/* Soft background glow circles */}
         <div className="absolute -right-12 -top-12 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
         <div className="absolute -left-12 -bottom-12 w-64 h-64 rounded-full bg-teal-400/10 blur-3xl pointer-events-none" />
 
@@ -239,18 +254,18 @@ export const DashboardPage: React.FC = () => {
           <p className="text-[11px] text-slate-400 mt-0.5">Log in under 5 seconds</p>
         </button>
 
-        <button
-          onClick={() => setIsCsvImportOpen(true)}
-          className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-cyan-400 dark:hover:border-cyan-500 transition shadow-sm text-left group"
+        <Link
+          to="/goals"
+          className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-amber-400 dark:hover:border-amber-500 transition shadow-sm text-left group block"
         >
-          <div className="w-10 h-10 rounded-2xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-            <FileSpreadsheet className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+            <Target className="w-5 h-5" />
           </div>
           <h3 className="text-xs font-bold text-slate-900 dark:text-white">
-            Bank CSV Import
+            Goals & Chits
           </h3>
-          <p className="text-[11px] text-slate-400 mt-0.5">Auto-categorize statements</p>
-        </button>
+          <p className="text-[11px] text-slate-400 mt-0.5">Diwali gold & Kametis</p>
+        </Link>
 
         <Link
           to="/household"
@@ -266,9 +281,64 @@ export const DashboardPage: React.FC = () => {
         </Link>
       </div>
 
+      {/* Phase 2 Spotlight: Upcoming EMIs & Bills */}
+      {upcomingBills.length > 0 && (
+        <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-rose-500" />
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                Upcoming EMIs & Fixed Bills
+              </h2>
+            </div>
+            <Link
+              to="/recurring"
+              className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline flex items-center gap-1"
+            >
+              <span>View all recurring</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            {upcomingBills.map((bill: RecurringItem) => (
+              <div
+                key={bill.id}
+                className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex flex-col justify-between space-y-2"
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      {bill.type.toUpperCase()}
+                    </span>
+                    <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">
+                      Due: {formatDateIndian(bill.next_due_date)}
+                    </span>
+                  </div>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white mt-1 truncate">
+                    {bill.name}
+                  </p>
+                  <p className="text-base font-black rupee-num text-slate-900 dark:text-white mt-0.5">
+                    {formatINR(bill.amount)}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => markRecurringAsPaid(bill)}
+                  className="w-full py-1.5 rounded-xl bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 text-xs font-bold transition flex items-center justify-center gap-1"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Mark as Paid</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Visual Analytics Row: Payment Modes & Top Categories */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Payment Modes Chart (Reflecting Indian payment habits: UPI, Cash, Cards) */}
+        {/* Payment Modes Chart */}
         <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -399,7 +469,7 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Recent 5 Transactions (Phase 1 Requirement 2) */}
+      {/* Recent 5 Transactions */}
       <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
           <div>

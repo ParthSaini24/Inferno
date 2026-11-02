@@ -10,6 +10,9 @@ import { DashboardPage } from '@/pages/DashboardPage';
 import { TransactionsPage } from '@/pages/TransactionsPage';
 import { BudgetsPage } from '@/pages/BudgetsPage';
 import { HouseholdPage } from '@/pages/HouseholdPage';
+import { GoalsPage } from '@/pages/GoalsPage';
+import { RecurringPage } from '@/pages/RecurringPage';
+import { InsightsPage } from '@/pages/InsightsPage';
 import { MorePage } from '@/pages/MorePage';
 import { AddTransactionModal } from '@/components/transactions/AddTransactionModal';
 import { SmartPasteModal } from '@/components/transactions/SmartPasteModal';
@@ -59,6 +62,9 @@ const AppContent: React.FC<{ darkMode: boolean; setDarkMode: (v: boolean) => voi
             <Route path="/transactions" element={<TransactionsPage />} />
             <Route path="/budgets" element={<BudgetsPage />} />
             <Route path="/household" element={<HouseholdPage />} />
+            <Route path="/goals" element={<GoalsPage />} />
+            <Route path="/recurring" element={<RecurringPage />} />
+            <Route path="/insights" element={<InsightsPage />} />
             <Route
               path="/more"
               element={<MorePage darkMode={darkMode} setDarkMode={setDarkMode} />}

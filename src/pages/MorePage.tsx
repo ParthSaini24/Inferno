@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useFinance } from '@/context/FinanceContext';
 import { isSupabaseConfigured } from '@/lib/supabase';
-import { INITIAL_GOALS, INITIAL_RECURRING } from '@/lib/mockData';
 import { formatINR, formatDateIndian } from '@/utils/formatters';
+import { Link } from 'react-router-dom';
 import {
   Settings,
   Database,
@@ -19,6 +19,9 @@ import {
   LogOut,
   ExternalLink,
   Info,
+  ChevronRight,
+  BarChart3,
+  Users2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -29,7 +32,7 @@ interface MorePageProps {
 
 export const MorePage: React.FC<MorePageProps> = ({ darkMode, setDarkMode }) => {
   const { user, household, signOut } = useAuth();
-  const { resetToDemoData, transactions } = useFinance();
+  const { resetToDemoData, transactions, goals, recurringItems } = useFinance();
 
   const handleExportCsv = () => {
     if (transactions.length === 0) {
@@ -68,7 +71,7 @@ export const MorePage: React.FC<MorePageProps> = ({ darkMode, setDarkMode }) => 
           Settings & More
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-          PaisaPilot preferences, Supabase database, and upcoming features
+          PaisaPilot preferences, Supabase database, and Phase 2 features
         </p>
       </div>
 
@@ -100,6 +103,51 @@ export const MorePage: React.FC<MorePageProps> = ({ darkMode, setDarkMode }) => 
           <LogOut className="w-3.5 h-3.5" />
           <span>Sign Out</span>
         </button>
+      </div>
+
+      {/* Feature Navigation Hub */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <Link
+          to="/goals"
+          className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-400 transition shadow-sm group"
+        >
+          <div className="w-9 h-9 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2">
+            <Target className="w-5 h-5" />
+          </div>
+          <h3 className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
+            <span>Goals & Chits</span>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+          </h3>
+          <p className="text-[10px] text-slate-400 mt-0.5">Kametis & Savings</p>
+        </Link>
+
+        <Link
+          to="/recurring"
+          className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-teal-400 transition shadow-sm group"
+        >
+          <div className="w-9 h-9 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-2">
+            <Repeat className="w-5 h-5" />
+          </div>
+          <h3 className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
+            <span>EMIs & SIPs</span>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+          </h3>
+          <p className="text-[10px] text-slate-400 mt-0.5">Fixed Commitments</p>
+        </Link>
+
+        <Link
+          to="/insights"
+          className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-400 transition shadow-sm group"
+        >
+          <div className="w-9 h-9 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-2">
+            <BarChart3 className="w-5 h-5" />
+          </div>
+          <h3 className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
+            <span>Insights</span>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+          </h3>
+          <p className="text-[10px] text-slate-400 mt-0.5">Analytics & Cash Flow</p>
+        </Link>
       </div>
 
       {/* Backend & Supabase Status Card */}
@@ -146,80 +194,6 @@ export const MorePage: React.FC<MorePageProps> = ({ darkMode, setDarkMode }) => 
         </div>
       </div>
 
-      {/* Phase 2 Sneak Peeks: Goals & EMIs / Recurring Items */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Goals preview */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Target className="w-4 h-4 text-emerald-500" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                Indian Savings Goals
-              </h3>
-            </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">
-              Phase 2
-            </span>
-          </div>
-
-          <div className="space-y-3 pt-1">
-            {INITIAL_GOALS.map((g) => {
-              const pct = Math.round((g.saved_amount / g.target_amount) * 100);
-              return (
-                <div key={g.id} className="space-y-1">
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-slate-800 dark:text-slate-200">{g.name}</span>
-                    <span className="rupee-num text-emerald-600 dark:text-emerald-400 font-bold">
-                      {formatINR(g.saved_amount)} / {formatINR(g.target_amount)}
-                    </span>
-                  </div>
-                  <div className="w-full h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-emerald-500 transition-all duration-300"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Recurring EMIs & SIPs preview */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Repeat className="w-4 h-4 text-teal-500" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                Upcoming EMIs & SIPs
-              </h3>
-            </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">
-              Phase 2
-            </span>
-          </div>
-
-          <div className="space-y-2 pt-1">
-            {INITIAL_RECURRING.map((r) => (
-              <div
-                key={r.id}
-                className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 flex items-center justify-between text-xs"
-              >
-                <div>
-                  <p className="font-bold text-slate-900 dark:text-white">{r.name}</p>
-                  <p className="text-[10px] text-slate-400">
-                    Due: {formatDateIndian(r.next_due_date)} • {r.type.toUpperCase()}
-                  </p>
-                </div>
-                <span className="font-bold rupee-num text-rose-500">
-                  {formatINR(r.amount)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* Preferences & Data Actions */}
       <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3">
         <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
@@ -259,7 +233,7 @@ export const MorePage: React.FC<MorePageProps> = ({ darkMode, setDarkMode }) => 
           <div className="py-3 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <RotateCcw className="w-4 h-4 text-amber-500" />
-              <span className="font-medium text-slate-700 dark:text-slate-300">Reset Demo Transactions</span>
+              <span className="font-medium text-slate-700 dark:text-slate-300">Reset Demo Data</span>
             </div>
             <button
               onClick={resetToDemoData}

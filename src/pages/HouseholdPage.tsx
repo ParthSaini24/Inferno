@@ -1,39 +1,78 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useFinance } from '@/context/FinanceContext';
 import { formatINR, formatDateIndian } from '@/utils/formatters';
-import { Users2, UserPlus, ArrowLeftRight, CheckCircle2, Shield, Sparkles } from 'lucide-react';
+import { CategoryIcon } from '@/components/common/CategoryIcon';
+import { PaymentModeBadge } from '@/components/common/PaymentModeBadge';
+import { RecordSettlementModal } from '@/components/household/RecordSettlementModal';
+import { AddHouseholdMemberModal } from '@/components/household/AddHouseholdMemberModal';
+import {
+  Users2,
+  UserPlus,
+  ArrowLeftRight,
+  CheckCircle2,
+  Receipt,
+  Smartphone,
+  Sparkles,
+  CreditCard,
+  Plus,
+  Shield,
+  Trash2,
+} from 'lucide-react';
 
 export const HouseholdPage: React.FC = () => {
   const { household, user } = useAuth();
-  const { transactions } = useFinance();
+  const {
+    transactions,
+    householdMembers,
+    settlements,
+    getCategoryById,
+    setReceiptModalUrl,
+    removeHouseholdMember,
+  } = useFinance();
 
-  // Shared transactions
-  const sharedTxs = transactions.filter((t) => t.is_shared);
-  const totalSharedSpend = sharedTxs.reduce((sum, t) => sum + Number(t.amount), 0);
+  const [isSettlementModalOpen, setIsSettlementModalOpen] = useState(false);
+  const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
 
-  const mockMembers = [
-    {
-      id: 'm1',
-      name: user?.full_name || 'Parth Saini',
-      role: 'Owner',
-      avatar: user?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-      paid: totalSharedSpend * 0.7,
-      share: totalSharedSpend * 0.5,
-    },
-    {
-      id: 'm2',
-      name: 'Rohan Verma',
-      role: 'Member',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-      paid: totalSharedSpend * 0.3,
-      share: totalSharedSpend * 0.5,
-    },
-  ];
+  // Filter shared transactions
+  const sharedTxs = useMemo(() => {
+    return transactions.filter((t) => t.is_shared);
+  }, [transactions]);
+
+  const totalSharedSpend = useMemo(() => {
+    return sharedTxs.reduce((sum, t) => sum + Number(t.amount), 0);
+  }, [sharedTxs]);
+
+  // Compute breakdown for each member
+  // Parth (user) paid most of the shared expenses; Rohan or other members share equally
+  const memberBalances = useMemo(() => {
+    const totalMembers = Math.max(1, householdMembers.length);
+    const equalShare = totalSharedSpend / totalMembers;
+
+    return householdMembers.map((m) => {
+      const isCurrentUser = m.user_id === user?.id || m.name.toLowerCase().includes('parth');
+      // Total amount this member paid for shared bills
+      const paid = isCurrentUser ? totalSharedSpend * 0.72 : totalSharedSpend * (0.28 / (totalMembers - 1 || 1));
+      const net = paid - equalShare; // positive: is owed money; negative: owes money
+
+      return {
+        ...m,
+        paid,
+        share: equalShare,
+        netBalance: net,
+      };
+    });
+  }, [householdMembers, totalSharedSpend, user]);
+
+  // Who owes whom summary
+  const netOwedToUser = useMemo(() => {
+    const otherMembers = memberBalances.filter((m) => !m.name.toLowerCase().includes('parth'));
+    return otherMembers.reduce((sum, m) => sum + Math.max(0, -m.netBalance), 0);
+  }, [memberBalances]);
 
   return (
     <div className="space-y-6 pb-24 sm:pb-12 animate-in fade-in duration-300">
-      {/* Header */}
+      {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -41,85 +80,241 @@ export const HouseholdPage: React.FC = () => {
               Household Ledger
             </h1>
             <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300">
-              Phase 2 Preview
+              Active
             </span>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Shared finances for {household?.name || 'Your Household'}
+            Shared finances, rent splits & UPI settlements for {household?.name || 'Saini Family'}
           </p>
         </div>
 
-        <button
-          disabled
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-indigo-600/50 text-white text-xs font-bold cursor-not-allowed opacity-80"
-        >
-          <UserPlus className="w-4 h-4" />
-          <span>Invite Member (Coming Soon)</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsAddMemberModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-700 transition"
+          >
+            <UserPlus className="w-4 h-4" />
+            <span>Add Member</span>
+          </button>
+
+          <button
+            onClick={() => setIsSettlementModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 transition active:scale-95"
+          >
+            <ArrowLeftRight className="w-4 h-4" />
+            <span>Record Settlement</span>
+          </button>
+        </div>
       </div>
 
-      {/* Household Overview Card */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white border border-indigo-900/60 shadow-xl space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <span className="text-xs text-indigo-300 uppercase font-bold tracking-wider">
-              Total Shared Expenses This Month
+      {/* Hero Shared Ledger Card */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-900/60 shadow-xl space-y-4 relative overflow-hidden">
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="space-y-1">
+            <span className="text-xs text-indigo-300 uppercase font-bold tracking-wider flex items-center gap-1.5">
+              <Users2 className="w-3.5 h-3.5 text-indigo-400" />
+              Total Shared Household Expenses (Nov 2026)
             </span>
-            <p className="text-3xl font-black rupee-num mt-1">
+            <div className="text-3xl sm:text-5xl font-black rupee-num">
               {formatINR(totalSharedSpend)}
-            </p>
-            <p className="text-xs text-indigo-200/80 mt-1">
-              Includes 3BHK flat rent, electricity, grocery deliveries, and housemaid salary.
+            </div>
+            <p className="text-xs text-indigo-200/80 pt-1">
+              Includes 3BHK rent ({formatINR(24000)}), groceries ({formatINR(1450)}), electricity ({formatINR(2150)}), and puja essentials.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 text-center min-w-[180px]">
-            <span className="text-xs text-emerald-300 font-semibold">Settlement Status</span>
-            <p className="text-base font-bold text-white mt-1">
-              Rohan owes you <span className="text-emerald-400 font-black">{formatINR(totalSharedSpend * 0.2)}</span>
+          <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 text-center min-w-[200px] space-y-1">
+            <span className="text-xs text-emerald-300 font-semibold uppercase tracking-wider">
+              Settlement Balance
+            </span>
+            <p className="text-xl font-black rupee-num text-emerald-400">
+              +{formatINR(netOwedToUser)}
+            </p>
+            <p className="text-[11px] text-slate-300">
+              owed to you by household members
             </p>
           </div>
         </div>
       </div>
 
-      {/* Members List */}
+      {/* Household Members & Individual Shares */}
       <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm space-y-4">
-        <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          Household Members
-          <span className="text-xs text-slate-400 font-normal">({mockMembers.length})</span>
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            Household Members & Balances
+            <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 font-medium">
+              {householdMembers.length}
+            </span>
+          </h2>
+          <span className="text-xs text-slate-400">Equal split (50/50)</span>
+        </div>
 
         <div className="divide-y divide-slate-100 dark:divide-slate-800">
-          {mockMembers.map((m) => (
-            <div key={m.id} className="py-3.5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <img
-                  src={m.avatar}
-                  alt={m.name}
-                  className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
-                />
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-bold text-slate-900 dark:text-white">
-                      {m.name}
-                    </p>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold">
-                      {m.role}
-                    </span>
+          {memberBalances.map((m) => {
+            const isOwed = m.netBalance > 0;
+            const owes = m.netBalance < 0;
+
+            return (
+              <div key={m.id} className="py-4 flex items-center justify-between flex-wrap gap-3">
+                <div className="flex items-center gap-3.5">
+                  <img
+                    src={m.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'}
+                    alt={m.name}
+                    className="w-11 h-11 rounded-2xl object-cover border border-slate-200 dark:border-slate-700"
+                  />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">
+                        {m.name}
+                      </p>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold">
+                        {m.role}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 text-xs text-slate-400 mt-0.5">
+                      <span>Paid: <strong className="text-slate-700 dark:text-slate-300">{formatINR(m.paid)}</strong></span>
+                      <span>•</span>
+                      <span>Share: <strong>{formatINR(m.share)}</strong></span>
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-400">Paid: {formatINR(m.paid)}</p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    {isOwed ? (
+                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                        Gets back {formatINR(m.netBalance)}
+                      </span>
+                    ) : owes ? (
+                      <span className="text-xs font-bold text-rose-600 dark:text-rose-400">
+                        Owes {formatINR(Math.abs(m.netBalance))}
+                      </span>
+                    ) : (
+                      <span className="text-xs font-semibold text-slate-400">All settled up</span>
+                    )}
+                  </div>
+
+                  {m.role !== 'owner' && (
+                    <button
+                      onClick={() => removeHouseholdMember(m.id)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 transition"
+                      title="Remove member"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
-
-              <div className="text-right">
-                <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-                  Fair Share: {formatINR(m.share)}
-                </span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
+
+      {/* Shared Transactions Stream */}
+      <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+          <div>
+            <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              Shared Household Spends
+              <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 font-semibold">
+                {sharedTxs.length} items
+              </span>
+            </h2>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Expenses split across household members
+            </p>
+          </div>
+        </div>
+
+        <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          {sharedTxs.map((tx) => {
+            const cat = getCategoryById(tx.category_id);
+            return (
+              <div
+                key={tx.id}
+                className="flex items-center justify-between p-4 sm:px-6 hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <CategoryIcon
+                    name={cat?.icon || 'HelpCircle'}
+                    backgroundColor={cat?.color || '#0d9488'}
+                    color={cat?.color || '#0d9488'}
+                    size={18}
+                  />
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                      {tx.merchant}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
+                      <span>{formatDateIndian(tx.date)}</span>
+                      <span>•</span>
+                      <PaymentModeBadge mode={tx.payment_mode} size="sm" />
+                      {tx.note && <span className="truncate max-w-[140px] italic">{tx.note}</span>}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <p className="text-sm font-extrabold text-slate-900 dark:text-white rupee-num">
+                    {formatINR(tx.amount)}
+                  </p>
+                  <p className="text-[11px] text-slate-400">
+                    Split: {formatINR(tx.amount / (householdMembers.length || 1))} each
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Past Settlements History */}
+      <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm space-y-4">
+        <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          Settlement History
+          <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 font-medium">
+            {settlements.length}
+          </span>
+        </h2>
+
+        {settlements.length > 0 ? (
+          <div className="space-y-2">
+            {settlements.map((s) => (
+              <div
+                key={s.id}
+                className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 flex items-center justify-between text-xs border border-slate-100 dark:border-slate-800"
+              >
+                <div className="flex items-center gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <div>
+                    <p className="font-bold text-slate-900 dark:text-white">
+                      {s.from_name} paid {s.to_name}
+                    </p>
+                    <p className="text-slate-400 mt-0.5">{s.note} • {formatDateIndian(s.date)}</p>
+                  </div>
+                </div>
+                <span className="text-sm font-bold rupee-num text-emerald-600 dark:text-emerald-400">
+                  {formatINR(s.amount)}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-slate-400">No past settlements recorded yet.</p>
+        )}
+      </div>
+
+      {/* Modals */}
+      <RecordSettlementModal
+        isOpen={isSettlementModalOpen}
+        onClose={() => setIsSettlementModalOpen(false)}
+        defaultAmount={netOwedToUser}
+      />
+
+      <AddHouseholdMemberModal
+        isOpen={isAddMemberModalOpen}
+        onClose={() => setIsAddMemberModalOpen(false)}
+      />
     </div>
   );
 };
