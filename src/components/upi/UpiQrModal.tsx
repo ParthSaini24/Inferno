@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { formatINR } from '@/utils/formatters';
 import { buildUpiUri, generateUpiQrDataUrl, getAppIntentUrl } from '@/utils/upi';
 import {
@@ -41,25 +41,39 @@ export const UpiQrModal: React.FC<UpiQrModalProps> = ({
   const [copiedLink, setCopiedLink] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const upiUri = buildUpiUri({
-    vpa: payeeVpa || 'parth@okaxis',
-    payeeName: payeeName || 'PaisaPilot User',
-    amount: amount > 0 ? amount : 100,
-    note,
-  });
+  // Deterministic, memoized UPI URI
+  const upiUri = useMemo(() => {
+    return buildUpiUri({
+      vpa: payeeVpa || 'parth@okaxis',
+      payeeName: payeeName || 'PaisaPilot User',
+      amount: amount > 0 ? amount : 100,
+      note,
+    });
+  }, [payeeVpa, payeeName, amount, note]);
 
   useEffect(() => {
-    if (isOpen && upiUri) {
-      setIsGenerating(true);
-      generateUpiQrDataUrl(upiUri, 360)
-        .then((url) => {
+    if (!isOpen || !upiUri) return;
+
+    let isMounted = true;
+    setIsGenerating(true);
+
+    generateUpiQrDataUrl(upiUri, 360)
+      .then((url) => {
+        if (isMounted) {
           setQrDataUrl(url);
           setIsGenerating(false);
-        })
-        .catch(() => {
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to generate UPI QR:', err);
+        if (isMounted) {
           setIsGenerating(false);
-        });
-    }
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [isOpen, upiUri]);
 
   if (!isOpen) return null;

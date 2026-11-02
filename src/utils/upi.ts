@@ -8,17 +8,18 @@ export interface UpiPaymentDetails {
   transactionRef?: string;
 }
 
+const qrCache = new Map<string, string>();
+
 /**
- * Builds standard NPCI UPI URI string.
+ * Builds standard NPCI UPI URI string deterministically.
  * Example: upi://pay?pa=parth@okaxis&pn=Parth%20Saini&am=4200.00&cu=INR&tn=Settlement
  */
 export function buildUpiUri(details: UpiPaymentDetails): string {
   const { vpa, payeeName, amount, note = 'PaisaPilot Settlement', transactionRef } = details;
-  const cleanVpa = vpa.trim().toLowerCase();
-  const cleanName = payeeName.trim();
-  const cleanAmount = Number(amount).toFixed(2);
-  const cleanNote = note.trim();
-  const tr = transactionRef || `PP${Date.now().toString().slice(-8)}`;
+  const cleanVpa = (vpa || 'parth@okaxis').trim().toLowerCase();
+  const cleanName = (payeeName || 'PaisaPilot User').trim();
+  const cleanAmount = Number(amount || 0).toFixed(2);
+  const cleanNote = (note || 'PaisaPilot Settlement').trim();
 
   const params = new URLSearchParams();
   params.set('pa', cleanVpa);
@@ -26,7 +27,9 @@ export function buildUpiUri(details: UpiPaymentDetails): string {
   params.set('am', cleanAmount);
   params.set('cu', 'INR');
   params.set('tn', cleanNote);
-  params.set('tr', tr);
+  if (transactionRef) {
+    params.set('tr', transactionRef);
+  }
 
   return `upi://pay?${params.toString()}`;
 }
@@ -42,11 +45,16 @@ export function isValidUpiId(vpa: string): boolean {
 }
 
 /**
- * Generates high-resolution QR code data URL from a UPI URI.
+ * Generates high-resolution QR code data URL from a UPI URI with memoized caching and SVG fallback.
  */
 export async function generateUpiQrDataUrl(upiUri: string, size = 320): Promise<string> {
+  const cacheKey = `${upiUri}_${size}`;
+  if (qrCache.has(cacheKey)) {
+    return qrCache.get(cacheKey)!;
+  }
+
   try {
-    return await QRCode.toDataURL(upiUri, {
+    const dataUrl = await QRCode.toDataURL(upiUri, {
       width: size,
       margin: 2,
       color: {
@@ -55,9 +63,30 @@ export async function generateUpiQrDataUrl(upiUri: string, size = 320): Promise<
       },
       errorCorrectionLevel: 'M',
     });
+    qrCache.set(cacheKey, dataUrl);
+    return dataUrl;
   } catch (err) {
-    console.error('Failed to generate UPI QR Code:', err);
-    throw err;
+    console.warn('Canvas toDataURL failed, attempting SVG fallback:', err);
+    try {
+      const svgString = await QRCode.toString(upiUri, {
+        type: 'svg',
+        width: size,
+        margin: 2,
+        color: {
+          dark: '#0f172a',
+          light: '#ffffff',
+        },
+      });
+      const svgDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(svgString)}`;
+      qrCache.set(cacheKey, svgDataUrl);
+      return svgDataUrl;
+    } catch (svgErr) {
+      console.error('All QR generation methods failed:', svgErr);
+      const fallbackUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(
+        upiUri
+      )}`;
+      return fallbackUrl;
+    }
   }
 }
 
