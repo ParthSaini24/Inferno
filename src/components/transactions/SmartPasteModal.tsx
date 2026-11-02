@@ -136,10 +136,10 @@ export const SmartPasteModal: React.FC<SmartPasteModalProps> = ({ isOpen, onClos
     : categories.find((c) => c.name === parsedResult?.suggested_category_name);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
+      <div className="w-full max-w-xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh] my-auto">
+        {/* Header - Fixed */}
+        <div className="shrink-0 flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-teal-500/20">
               <Sparkles className="w-5 h-5" />
@@ -166,7 +166,7 @@ export const SmartPasteModal: React.FC<SmartPasteModalProps> = ({ isOpen, onClos
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-5 overflow-y-auto flex-1">
+        <div className="p-6 space-y-5 overflow-y-auto flex-1 overscroll-contain">
           {/* Quick Demo Samples */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
@@ -307,7 +307,7 @@ export const SmartPasteModal: React.FC<SmartPasteModalProps> = ({ isOpen, onClos
         </div>
 
         {/* Footer Actions */}
-        <div className="p-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between gap-3">
+        <div className="shrink-0 p-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={onClose}

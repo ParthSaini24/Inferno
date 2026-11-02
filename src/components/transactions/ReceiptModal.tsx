@@ -10,10 +10,10 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ url, onClose }) => {
   if (!url) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative max-w-2xl w-full bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto">
+      <div className="relative max-w-2xl w-full bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto">
         {/* Top bar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 text-white">
+        <div className="shrink-0 flex items-center justify-between px-6 py-4 border-b border-slate-800 text-white">
           <span className="text-sm font-semibold">Attached Bill / Receipt</span>
           <div className="flex items-center gap-2">
             <a

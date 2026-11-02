@@ -131,10 +131,10 @@ export const VoiceExpenseModal: React.FC<VoiceExpenseModalProps> = ({ isOpen, on
   const category = parsedResult ? getCategoryById(parsedResult.category_id) : null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-teal-600 to-indigo-600 text-white flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
+      <div className="w-full max-w-md max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col my-auto">
+        {/* Header - Fixed */}
+        <div className="shrink-0 px-6 py-4 bg-gradient-to-r from-teal-600 to-indigo-600 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
               <Mic className="w-4 h-4 text-white" />
@@ -153,24 +153,24 @@ export const VoiceExpenseModal: React.FC<VoiceExpenseModalProps> = ({ isOpen, on
           </button>
         </div>
 
-        {/* Listening Sphere & Soundwave */}
-        <div className="p-6 flex flex-col items-center justify-center space-y-4 text-center">
+        {/* Listening Sphere & Soundwave - Scrollable Content Body */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col items-center justify-start space-y-3.5 text-center overscroll-contain">
           <button
             onClick={toggleListening}
-            className={`w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 relative ${
+            className={`w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 relative shrink-0 ${
               isListening
-                ? 'bg-rose-500 text-white scale-110 shadow-xl shadow-rose-500/40 ring-8 ring-rose-500/20 animate-pulse'
+                ? 'bg-rose-500 text-white scale-105 shadow-xl shadow-rose-500/40 ring-8 ring-rose-500/20 animate-pulse'
                 : 'bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 border-2 border-teal-500/40 hover:bg-teal-100 hover:scale-105 shadow-md'
             }`}
           >
             {isListening ? (
-              <Mic className="w-10 h-10 animate-bounce" />
+              <Mic className="w-8 h-8 animate-bounce" />
             ) : (
-              <Mic className="w-10 h-10" />
+              <Mic className="w-8 h-8" />
             )}
           </button>
 
-          <div>
+          <div className="shrink-0">
             <p className="text-sm font-bold text-slate-900 dark:text-white">
               {isListening ? 'Listening... Speak now!' : 'Tap mic and speak your expense'}
             </p>
@@ -180,7 +180,7 @@ export const VoiceExpenseModal: React.FC<VoiceExpenseModalProps> = ({ isOpen, on
           </div>
 
           {/* Live Transcript Bubble */}
-          <div className="w-full min-h-[56px] p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700 flex items-center justify-center text-xs">
+          <div className="w-full min-h-[48px] p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700 flex items-center justify-center text-xs shrink-0">
             {transcript ? (
               <p className="text-slate-800 dark:text-slate-200 font-semibold italic">
                 &ldquo;{transcript}&rdquo;
@@ -191,7 +191,7 @@ export const VoiceExpenseModal: React.FC<VoiceExpenseModalProps> = ({ isOpen, on
           </div>
 
           {/* Quick Indian Hinglish Test Prompts */}
-          <div className="w-full space-y-1.5 text-left">
+          <div className="w-full space-y-1.5 text-left shrink-0">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
               Try 1-Click Indian Voice Prompts:
             </span>
@@ -211,7 +211,7 @@ export const VoiceExpenseModal: React.FC<VoiceExpenseModalProps> = ({ isOpen, on
 
           {/* Parsed Output Card */}
           {parsedResult && (
-            <div className="w-full p-4 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/60 text-left space-y-2.5 animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-full p-4 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/60 text-left space-y-2.5 animate-in fade-in zoom-in-95 duration-200 shrink-0">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
@@ -251,12 +251,12 @@ export const VoiceExpenseModal: React.FC<VoiceExpenseModalProps> = ({ isOpen, on
           )}
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3">
+        {/* Footer Actions - Fixed */}
+        <div className="shrink-0 p-4 sm:p-5 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-400"
+            className="flex-1 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
           >
             Cancel
           </button>

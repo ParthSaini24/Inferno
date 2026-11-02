@@ -37,10 +37,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="p-6 text-center border-b border-slate-100 dark:border-slate-800 relative bg-gradient-to-b from-teal-50/50 to-transparent dark:from-teal-950/20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto">
+      <div className="w-full max-w-md max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col my-auto">
+        {/* Header - Fixed */}
+        <div className="shrink-0 p-6 text-center border-b border-slate-100 dark:border-slate-800 relative bg-gradient-to-b from-teal-50/50 to-transparent dark:from-teal-950/20">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
@@ -59,8 +59,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </p>
         </div>
 
-        {/* Form Body */}
-        <div className="p-6 space-y-4">
+        {/* Form Body - Scrollable */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 overscroll-contain">
           {/* Quick Demo Guest Button */}
           <button
             type="button"

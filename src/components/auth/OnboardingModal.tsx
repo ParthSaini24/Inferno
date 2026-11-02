@@ -30,10 +30,10 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
-        {/* Banner with gradient */}
-        <div className="bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 p-8 text-white text-center relative overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-300 overflow-y-auto">
+      <div className="w-full max-w-lg max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 my-auto">
+        {/* Banner with gradient - Fixed */}
+        <div className="shrink-0 bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 p-6 sm:p-8 text-white text-center relative overflow-hidden">
           <div className="w-14 h-14 mx-auto rounded-3xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white text-2xl font-black mb-3 shadow-inner">
             ₹
           </div>
@@ -45,8 +45,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onClos
           </p>
         </div>
 
-        {/* Content Body */}
-        <div className="p-6 sm:p-8 space-y-6">
+        {/* Content Body - Scrollable */}
+        <div className="p-6 sm:p-8 space-y-6 overflow-y-auto flex-1 overscroll-contain">
           {step === 1 ? (
             <div className="space-y-4">
               <div className="space-y-1.5">

@@ -94,10 +94,10 @@ _Logged via PaisaPilot 🇮🇳 • Smart Money Manager_`;
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
+      <div className="w-full max-w-md max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col my-auto">
+        {/* Header - Fixed */}
+        <div className="shrink-0 px-6 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
               <Share2 className="w-4 h-4 text-white" />
@@ -116,8 +116,8 @@ _Logged via PaisaPilot 🇮🇳 • Smart Money Manager_`;
           </button>
         </div>
 
-        {/* Formatted Message Preview */}
-        <div className="p-6 space-y-4">
+        {/* Formatted Message Preview - Scrollable Body */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 overscroll-contain">
           <div className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/60 text-xs text-slate-800 dark:text-slate-200 font-mono whitespace-pre-wrap leading-relaxed shadow-inner">
             {digestText}
           </div>
@@ -127,8 +127,8 @@ _Logged via PaisaPilot 🇮🇳 • Smart Money Manager_`;
           </p>
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
+        {/* Footer Actions - Fixed */}
+        <div className="shrink-0 p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
           <button
             onClick={handleSendWhatsApp}
             className="w-full py-3 rounded-2xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs shadow-md shadow-emerald-600/25 flex items-center justify-center gap-2 transition active:scale-[0.98]"

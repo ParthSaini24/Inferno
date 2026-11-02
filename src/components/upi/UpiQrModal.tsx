@@ -119,10 +119,10 @@ export const UpiQrModal: React.FC<UpiQrModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-sm sm:max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
+      <div className="w-full max-w-sm sm:max-w-md max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col my-auto">
+        {/* Header - Fixed */}
+        <div className="shrink-0 px-6 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
               <QrCode className="w-4 h-4 text-white" />
@@ -144,34 +144,35 @@ export const UpiQrModal: React.FC<UpiQrModalProps> = ({
           </button>
         </div>
 
-        {/* Amount & Payee Badge */}
-        <div className="p-5 text-center bg-slate-50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 space-y-1">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Amount to Pay
-          </span>
-          <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white rupee-num">
-            {formatINR(amount)}
+        {/* Scrollable Content Body */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 flex flex-col items-center space-y-3.5 overscroll-contain">
+          {/* Amount & Payee Badge */}
+          <div className="w-full p-3.5 text-center bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-0.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Amount to Pay
+            </span>
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white rupee-num">
+              {formatINR(amount)}
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Paying to <span className="font-bold text-slate-800 dark:text-slate-200">{payeeName}</span>
+            </p>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Paying to <span className="font-bold text-slate-800 dark:text-slate-200">{payeeName}</span>
-          </p>
-        </div>
 
-        {/* QR Code Container */}
-        <div className="p-6 flex flex-col items-center justify-center space-y-4">
-          <div className="relative p-3.5 bg-white rounded-2xl shadow-md border-2 border-slate-100 dark:border-slate-700">
+          {/* QR Code Container */}
+          <div className="relative p-3 bg-white rounded-2xl shadow-md border-2 border-slate-100 dark:border-slate-700">
             {isGenerating ? (
-              <div className="w-56 h-56 flex items-center justify-center text-slate-400 text-xs">
+              <div className="w-48 h-48 sm:w-52 sm:h-52 flex items-center justify-center text-slate-400 text-xs">
                 Generating QR...
               </div>
             ) : qrDataUrl ? (
               <img
                 src={qrDataUrl}
                 alt={`UPI QR for ${payeeName}`}
-                className="w-56 h-56 rounded-xl object-contain"
+                className="w-48 h-48 sm:w-52 sm:h-52 rounded-xl object-contain"
               />
             ) : (
-              <div className="w-56 h-56 flex items-center justify-center text-slate-400 text-xs">
+              <div className="w-48 h-48 sm:w-52 sm:h-52 flex items-center justify-center text-slate-400 text-xs">
                 QR Unavailable
               </div>
             )}
@@ -200,7 +201,7 @@ export const UpiQrModal: React.FC<UpiQrModalProps> = ({
           </div>
 
           {/* Mobile Direct 1-Tap App Intent Launchers */}
-          <div className="w-full space-y-2">
+          <div className="w-full space-y-1.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block text-center">
               Tap to open Indian Payment App
             </span>
@@ -256,8 +257,8 @@ export const UpiQrModal: React.FC<UpiQrModalProps> = ({
           </div>
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
+        {/* Footer Actions - Fixed */}
+        <div className="shrink-0 p-4 sm:p-5 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800 space-y-2">
           <button
             onClick={handleConfirmSettlement}
             className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs shadow-md shadow-emerald-600/25 flex items-center justify-center gap-2 transition active:scale-[0.98]"
